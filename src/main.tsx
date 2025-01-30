@@ -21,6 +21,7 @@ import Principal from './screens/Principal';
 import Product from './screens/Product';
 import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
+import Visualization from './screens/Visualization'
 
 
 //IMPORTAÇÃP DO PROVEDOR DE ESTADOS GLOBAIS
@@ -40,6 +41,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="product/:product" element={<Product />} />
           <Route path="custom/:product" element={<CustomProduct />} />
           <Route path="cart/edit/:product" element={<EditProductCart />} />
+          <Route path="/visualization" element={<Visualization />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />

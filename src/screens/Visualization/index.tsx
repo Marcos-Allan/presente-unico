@@ -3,7 +3,7 @@ import { Suspense, useMemo } from 'react';
 import { TextureLoader } from 'three';
 import { OrbitControls } from '@react-three/drei';
 
-import Scene from '../../components/Scene'
+import Scenes from '../../components/Scene'
 
 export default function Visualization() {
     // const estampaUrl = "https://www.estampacanecas.com.br/PicEstampas/uploads/1/112/sdxbywl0ydsge67y.jpeg";
@@ -15,7 +15,7 @@ export default function Visualization() {
 
   return (
     <div className={`w-full px-10 bg-green-600 min-h-screen flex flex-col items-center justify-center`}>
-      <Scene />
+      <Scenes />
       <Suspense fallback={null}>
         <Canvas>
           <ambientLight intensity={0.5} />

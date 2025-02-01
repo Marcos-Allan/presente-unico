@@ -7,11 +7,16 @@ import { Decal, useGLTF, useTexture } from "@react-three/drei";
 import { useControls } from "leva";
 import { useState } from "react";
 import { degToRad } from "three/src/math/MathUtils.js";
+import { Vector3, Euler } from "three";
 
 // Mugs by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/8cBJ9XWbkiv)
-export function Mug(props:any) {
+export function Mug(props: any) {
   const texture = useTexture("https://pngfre.com/wp-content/uploads/anime-poster.png");
-  const { nodes, materials } = useGLTF("/mug.glb");
+  const { nodes, materials } = useGLTF("/mug.glb") as any;
+
+  const [pos, setPos] = useState<Vector3>(new Vector3(0, 1.8, 1));
+  const [rotation, setRotation] = useState<Euler>(new Euler(0, 0, 0));
+  const [scale, setScale] = useState<Vector3>(new Vector3(1.5, 1.5, 1.5));
 
   useControls({
     angle: {
@@ -23,8 +28,8 @@ export function Mug(props:any) {
         const x = Math.cos(value);
         const z = Math.sin(value);
         const rot = Math.atan2(x, z);
-        setRotation(() => [0, rot, 0]);
-        setPos((pos) => [x, pos[1], z]);
+        setRotation(new Euler(0, rot, 0));
+        setPos(new Vector3(x, pos.y, z));
       },
     },
     posY: {
@@ -33,7 +38,7 @@ export function Mug(props:any) {
       value: 1.8,
       step: 0.01,
       onChange: (value) => {
-        setPos((pos) => [pos[0], value, pos[2]]);
+        setPos(new Vector3(pos.x, value, pos.z));
       },
     },
     scale: {
@@ -42,50 +47,39 @@ export function Mug(props:any) {
       value: 1.5,
       step: 0.01,
       onChange: (value) => {
-        setScale(() => [value, value, 1.5]);
+        setScale(new Vector3(value, value, 1.5));
       },
     },
   });
 
-  const [pos, setPos] = useState<any[]>([0, 1.8, 1]);
-  const [rotation, setRotation] = useState<any[]>([0, 0, 0]);
-  const [scale, setScale] = useState<any[]>([1.5, 1.5, 1.5]);
-
   return (
     <group {...props} dispose={null}>
-      <mesh
-        geometry={nodes.Arc001_1.geometry}
-        material={materials["01___Default-2"]}
-      />
-      <mesh
-        geometry={nodes.Arc001_1_1.geometry}
-        material={materials["02___Default-2"]}
-      />
-      <mesh
-        geometry={nodes.Arc001_1_2.geometry}
-        material={materials["02___Default"]}
-      />
-      <mesh
-        geometry={nodes.Arc001_1_3.geometry}
-        material={materials["01___Default"]}
-      />
-      <mesh geometry={nodes.Arc001_1_4.geometry}>
-        <meshBasicMaterial transparent opacity={0} />
-        <Decal
-          // debug // Makes "bounding box" of the decal visible
-          position={pos} // Position of the decal
-          rotation={rotation} // Rotation of the decal (can be a vector or a degree in radians)
-          scale={scale} // Scale of the decal
-        >
-          <meshStandardMaterial
-            map={texture}
-            toneMapped={false}
-            transparent
-            polygonOffset
-            polygonOffsetFactor={-1} // The mesh should take precedence over the original
-          />
-        </Decal>
-      </mesh>
+      {nodes.Arc001_1 && (
+        <mesh geometry={nodes.Arc001_1.geometry} material={materials["01___Default-2"]} />
+      )}
+      {nodes.Arc001_1_1 && (
+        <mesh geometry={nodes.Arc001_1_1.geometry} material={materials["02___Default-2"]} />
+      )}
+      {nodes.Arc001_1_2 && (
+        <mesh geometry={nodes.Arc001_1_2.geometry} material={materials["02___Default"]} />
+      )}
+      {nodes.Arc001_1_3 && (
+        <mesh geometry={nodes.Arc001_1_3.geometry} material={materials["01___Default"]} />
+      )}
+      {nodes.Arc001_1_4 && (
+        <mesh geometry={nodes.Arc001_1_4.geometry}>
+          <meshBasicMaterial transparent opacity={0} />
+          <Decal position={pos} rotation={rotation} scale={scale}>
+            <meshStandardMaterial
+              map={texture}
+              toneMapped={false}
+              transparent
+              polygonOffset
+              polygonOffsetFactor={-1}
+            />
+          </Decal>
+        </mesh>
+      )}
     </group>
   );
 }

@@ -27,7 +27,7 @@ export default function Header() {
             style={{ boxShadow: "0px 0px 1px 0px rgba(0, 0, 0, 0.5)" }}
             className={`
                 w-full bg-my-white flex items-center px-3 py-2 mb-2 sm:mb-5
-                ${(location.pathname !== '/sign-in') && (location.pathname !== '/sign-up') ? 'justify-between' : 'justify-center'}
+                ${(location.pathname !== '/sign-in') && (location.pathname !== '/sign-up') && (location.pathname !== '/forgout-password') ? 'justify-between' : 'justify-center'}
             `}
         >
             <div
@@ -45,7 +45,7 @@ export default function Header() {
                     className={`w-[110px]`}
                 />
             </div>
-            {(location.pathname !== '/sign-in') && (location.pathname !== '/sign-up') && (
+            {(location.pathname !== '/sign-in') && (location.pathname !== '/sign-up') && (location.pathname !== '/forgout-password') && (
                 <div className={`flex items-center gap-2 text-[28px] text-my-secondary`}>
                     <FaUser
                         className={`hover:scale-[1.3] transition-all duration-[.3s] cursor-pointer`}

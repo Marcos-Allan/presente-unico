@@ -247,6 +247,13 @@ export default function SignUp() {
                         Entre
                     </Link>
                 </p>
+                
+                <p className={`text-center max-w-[700px] mb-20 font-bold text-my-secondary text-[18px]`}>
+                    Esqueceu sua senha?
+                    <Link to={'/forgout-password'} className={`ml-2 underline text-my-primary`}>
+                        Recupere
+                    </Link>
+                </p>
                 <LoadingPage />
             </div>
             <Footer />

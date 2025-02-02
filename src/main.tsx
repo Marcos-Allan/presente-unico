@@ -21,7 +21,10 @@ import Principal from './screens/Principal';
 import Product from './screens/Product';
 import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
-import Visualization from './screens/Visualization'
+import ForgoutPassword from './screens/ForgoutPassword';
+import VerifyCode from './screens/VerifyCode';
+import SwitchPassword from './screens/SwitchPassword';
+import Visualization from './screens/Visualization';
 import Model3D from './screens/Model3D'
 
 //IMPORTAÇÃP DO PROVEDOR DE ESTADOS GLOBAIS
@@ -36,6 +39,9 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/" element={<Home />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/forgout-password" element={<ForgoutPassword />} />
+          <Route path="/verify-code" element={<VerifyCode />} />
+          <Route path="/switch-password" element={<SwitchPassword />} />
           <Route path="/principal" element={<Principal />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="product/:product" element={<Product />} />

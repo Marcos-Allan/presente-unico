@@ -18,7 +18,7 @@ export default function Footer() {
                     <MdEmail className={`cursor-pointer hover:scale-[1.07] transition-all duration-[.3s]`} />
                 </div>
                 <p className="mb-3">Está com duvidas?</p>
-                <p>Clique <a className={`text-my-primary underline font-bold`} href="#">aqui</a> e tentaremos te ajudar!</p>
+                <p>Clique <a className={`text-my-primary underline font-bold hover:text-my-black focus:text-my-black focus:outline-none`} href="#">aqui</a> e tentaremos te ajudar!</p>
             </div>
             <div className={`w-full flex flex-col items-center justify-center bg-my-white py-3`}>
                 <img

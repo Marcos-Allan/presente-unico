@@ -193,14 +193,14 @@ export default function SignIn() {
 
                 <p className={`text-center max-w-[700px] mb-5 mt-20 font-bold text-my-secondary text-[18px]`}>
                     Não tem uma conta ainda?
-                    <NavLink to={'/sign-up'} className={`ml-2 underline text-my-primary`}>
+                    <NavLink to={'/sign-up'} className={`ml-2 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Cadastre-se
                     </NavLink>
                 </p>
                 
                 <p className={`text-center max-w-[700px] mb-20 font-bold text-my-secondary text-[18px]`}>
                     Esqueceu sua senha?
-                    <NavLink to={'/forgout-password'} className={`ml-2 underline text-my-primary`}>
+                    <NavLink to={'/forgout-password'} className={`ml-2 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Recupere
                     </NavLink>
                 </p>

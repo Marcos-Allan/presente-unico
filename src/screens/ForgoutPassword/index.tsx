@@ -138,14 +138,14 @@ export default function ForgoutPassword() {
 
                 <p className={`text-center max-w-[700px] mb-5 mt-20 font-bold text-my-secondary text-[18px]`}>
                     Já tem uma conta?
-                    <NavLink to={'/sign-in'} className={`ml-2 underline text-my-primary`}>
+                    <NavLink to={'/sign-in'} className={`ml-2 underline text-my-primary  focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Entre
                     </NavLink>
                 </p>
 
                 <p className={`text-center max-w-[700px] mb-20 font-bold text-my-secondary text-[18px]`}>
                     Não tem uma conta ainda?
-                    <NavLink to={'/sign-up'} className={`ml-2 underline text-my-primary`}>
+                    <NavLink to={'/sign-up'} className={`ml-2 underline text-my-primary  focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Cadastre-se
                     </NavLink>
                 </p>

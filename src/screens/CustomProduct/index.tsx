@@ -264,16 +264,22 @@ export default function CustomProduct() {
                 })
             } else {
                 //CÓDIGO CLOUDINARY
+                
+                //GERA UM ID ALEATÓRIO
+                const id = Math.floor(Math.random() * 99999)
+                
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('upload_preset', 'present'); //presente-unico
                 formData.append('cloud_name', 'dgvxpeu0a'); //dgvxpeu0a
                 formData.append('folder', 'images/estampas'); // Exemplo de pasta
-                formData.append('public_id', 'custom_public_id'); // Exemplo de public ID
+                formData.append('public_id', String(id)); // Exemplo de public ID
+                
 
                 axios.post('https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload', formData)
                 .then(response => {
                     if (response.data.secure_url) {
+
                         const url = response.data.secure_url;
 
                         localStorage.setItem('estampa-visu3d', url)
@@ -287,8 +293,6 @@ export default function CustomProduct() {
                         //PEGA A URL DA IMAGEM
                         setImg(url);
 
-                        //GERA UM ID ALEATÓRIO
-                        const id = Math.floor(Math.random() * 99999)
 
                         //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
                         axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {

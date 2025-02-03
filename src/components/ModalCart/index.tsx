@@ -65,6 +65,19 @@ export default function ModalCart() {
                                         </div>
                                         <div
                                             onClick={() => {
+                                                //SALVA O ITEM A EDITAR NO LOCALSTORAGE DO NAVEGADOR
+                                                localStorage.setItem('productPUE', JSON.stringify({
+                                                    id: item.id,
+                                                    image: item.image,
+                                                    name: item.name,
+                                                    print: item.estampa,
+                                                    size: item.size,
+                                                    material: item.material,
+                                                    quantity: item.quantity,
+                                                    price: item.price,})
+                                                )
+
+                                                //SALVA O ITEM A EDITAR NO FRONTEND DA APLICAÇÃO
                                                 setProductSelectedEdit({
                                                     id: item.id,
                                                     image: item.image,
@@ -76,6 +89,7 @@ export default function ModalCart() {
                                                     price: item.price,
                                                 })
 
+                                                //NAVEGA PARA A PÁGINA DE EDIÇÃO DO PRODUTO
                                                 navigate(`/cart/edit/${cart.name}`)
                                             }}
                                             className={`bg-my-secondary w-8 h-8 flex items-center justify-center absolute top-[-20px] right-[-20px] rounded-[50%]`}

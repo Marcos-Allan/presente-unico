@@ -28,7 +28,9 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         ? JSON.parse(localStorage.getItem('productPU') as any)
         : { image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p'] })
 
-    const [productSelectedEdit, setProductSelectedEdit] = useState<any>({ image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p']  })
+    const [productSelectedEdit, setProductSelectedEdit] = useState<any>(localStorage.getItem('productPUE') !== null
+    ? JSON.parse(localStorage.getItem('productPUE') as any)
+    : { image: 'undefined', name:'undefined', price:'undefined', materials:['n', 'p']  })
     const [cart, setCart] = useState<any[]>(userLS !== null
         ? JSON.parse(userLS).cart
         : []

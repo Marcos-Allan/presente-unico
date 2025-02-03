@@ -17,10 +17,6 @@ import ModalFinishBuy from '../../components/ModalFinishBuy';
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
 
-//IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../utils/firebase';
-
 //IMPORTAÇÃO DOS ÍCONES
 import { FaTrashAlt } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
@@ -34,14 +30,14 @@ export default function EditProductCart() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { productSelectedEdit, user, toggleLoading, setCart, toggleUser }:any = useContext(GlobalContext);
+    const { productSelectedEdit, setProductSelectedEdit, user, toggleLoading, setCart, toggleUser }:any = useContext(GlobalContext);
 
     //VARIÁVEIS IMUTÁVEIS
     const myName:any = productSelectedEdit.name
     const [myPrice, setMyPrice] = useState<any>(productSelectedEdit.price)
     
     //UTILIZAÇÃO DO HOOK useState
-    const [myEstampa, setMyEstampa] = useState<any>(productSelectedEdit.print)
+    const [myEstampa, setMyEstampa] = useState<any>("https://res.cloudinary.com/dgvxpeu0a/image/upload/v1738601083/images/estampas/34818.jpg")
     const [myMaterial, setMyMaterial] = useState<any>(productSelectedEdit.material)
     const [myQuantity, setMyQuantity] = useState<any>(productSelectedEdit.quantity)
     const [mySize, setMySize] = useState<any>(productSelectedEdit.size)
@@ -55,9 +51,6 @@ export default function EditProductCart() {
     
     const [products, setProducts] = useState<any>()
     const [typeInd, setTypeInd] = useState<number>(0)
-
-    //const API_KEY = 649148382115836
-    //const API_SECRET = JGOB8jcqs0P3YZm_mEK5i2NFbrQ
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -278,7 +271,7 @@ export default function EditProductCart() {
             
             //VERIFICA SE NÃO TEM IMAGEM
             if (!file) {
-                //RESOLVE A PROMEISSE PASSANDO A IMAGEM COMO PARÂMETRO
+                //RESOLVE A PROMISSE PASSANDO A IMAGEM COMO PARÂMETRO
                 resolve(img);
                 
                 //MUDA O ESTADO DA APLICAÇÃO PARA false
@@ -290,7 +283,7 @@ export default function EditProductCart() {
                     itemId: productSelectedEdit.id,
                     novosDados: {
                         id: productSelectedEdit.id,
-                        image:  products[typeInd].img[productID],
+                        image: products[typeInd].img[productID],
                         material: myMaterial,
                         name: myName,
                         price: myPrice,
@@ -300,84 +293,123 @@ export default function EditProductCart() {
                     }
                 })
                 .then(function (response) {
+                    //ATUALIZA OS DADOS DOD USUÁRIO
+                    toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+
                     //ATUALIZA O CARRINHO
                     setCart(response.data.cart)
 
                     //COLOCA ALERT NA TELA
                     notifySucess('item atualizado com sucesso')
+
+                    //SALVA O ITEM A EDITAR NO LOCALSTORAGE DO NAVEGADOR
+                    localStorage.setItem('productPUE', JSON.stringify({
+                        id: productSelectedEdit.id,
+                        image: products[typeInd].img[productID],
+                        name: myName,
+                        print: myEstampa,
+                        size: mySize,
+                        material: myMaterial,
+                        quantity: myQuantity,
+                        price: myPrice,})
+                    )
+
+                    //SALVA O ITEM A EDITAR NO FRONTEND DA APLICAÇÃO
+                    setProductSelectedEdit({
+                        id: productSelectedEdit.id,
+                        image: products[typeInd].img[productID],
+                        name: myName,
+                        print: myEstampa,
+                        size: mySize,
+                        material: myMaterial,
+                        quantity: myQuantity,
+                        price: myPrice,
+                    })
                 })
                 .catch(function (error) {
                     console.log(error)
                 })
             } else {
-                const storageRef = ref(storage, `images/estampas/${String(Math.floor(Math.random() * 99999999999999))}`);
-                const uploadTask = uploadBytesResumable(storageRef, file);
+                //CÓDIGO CLOUDINARY
+                
+                //GERA UM ID ALEATÓRIO
+                const id = Math.floor(Math.random() * 99999)
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'present'); //presente-unico
+                formData.append('cloud_name', 'dgvxpeu0a'); //dgvxpeu0a
+                formData.append('folder', 'images/estampas'); // Exemplo de pasta
+                formData.append('public_id', String(id)); // Exemplo de public ID
+                
 
-                uploadTask.on(
-                    "state_changed",
-                    (snapshot:any) => {
-                        //PEGA A PORCENTAGEM DO UPLOAD DA IMAGEM
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log(progress)
-                    },
-                    (error:any) => {
-                        //DA UM ALERTA CASO OCORRA UM ERRO
-                        alert(error);
-                        
-                        //FINALIZA A PROMISSE ABORTANDO E PASSANDO O ERRO OCORRIDO COMO PARÂMETRO
-                        reject(error);
-                    },
-                    () => {
-                        //PEGA A URL DA IMAGEM QUE FOI SALVA NO BANCO DE DADOS
-                        getDownloadURL(uploadTask.snapshot.ref)
-                            .then((url:any) => {
-                                //SETA A URL DA IMAGEM
-                                setMyEstampa(url);
+                axios.post('https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload', formData)
+                .then(response => {
+                    if (response.data.secure_url) {
+                        const url = response.data.secure_url;
+
+                        localStorage.setItem('estampa-visu3d', url)
+
+                        //SETA A URL DA IMAGEM
+                        setMyEstampa(url);
                                 
-                                //ESCREVE A URL DA IMAGEM NO CONSOLE
-                                console.log('imagem salva: '+ url)
+                        //ESCREVE A URL DA IMAGEM NO CONSOLE
+                        console.log('imagem salva: '+ url)
 
-                                //ROTA DE ATUALIZAÇÃO DO ITEM DO CARRINHO
-                                axios.put('https://back-tcc-murilo.onrender.com/update-carrinho', {
-                                    userId: user.id,
-                                    itemId: productSelectedEdit.id,
-                                    novosDados: {
-                                        id: productSelectedEdit.id,
-                                        image:  products[typeInd].img[productID],
-                                        material: myMaterial,
-                                        name: myName,
-                                        price: myPrice,
-                                        estampa: url,
-                                        quantity: myQuantity,
-                                        size: mySize,
-                                    }
-                                })
-                                .then(function (response) {
-                                    //ATUALIZA O CARRINHO
-                                    setCart(response.data.cart)
+                        //PEGA A URL DA IMAGEM
+                        setImg(url);
 
-                                    //COLOCA ALERT NA TELA
-                                    notifySucess('item atualizado com sucesso')
-                                })
-                                .catch(function (error) {
-                                    console.log(error)
-                                })
+                        setProductSelectedEdit({
+                            id: productSelectedEdit.id,
+                            image: productSelectedEdit.image,
+                            name: productSelectedEdit.name,
+                            print: response.data.secure_url,
+                            size: productSelectedEdit.size,
+                            material: productSelectedEdit.material,
+                            quantity: productSelectedEdit.quantity,
+                            price: productSelectedEdit.price,
+                        })
 
-                                //MUDA O ESTADO DA APLICAÇÃO PARA false
-                                toggleLoading(false)
+                        //ROTA DE ATUALIZAÇÃO DO ITEM DO CARRINHO
+                        axios.put('https://back-tcc-murilo.onrender.com/update-carrinho', {
+                            userId: user.id,
+                            itemId: productSelectedEdit.id,
+                            novosDados: {
+                                id: productSelectedEdit.id,
+                                image:  products[typeInd].img[productID],
+                                material: myMaterial,
+                                name: myName,
+                                price: myPrice,
+                                estampa: response.data.secure_url,
+                                quantity: myQuantity,
+                                size: mySize,
+                            }
+                        })
+                        .then(function (response) {
+                            //ATUALIZA OS DADOS DOD USUÁRIO
+                            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+                            
+                            //ATUALIZA O CARRINHO
+                            setCart(response.data.cart)
 
-                                //RESOLVE A PROMESSA PASSANDO A IMAGEM COMO PARÂMETRO
-                                resolve(url);
-                            })
-                            .catch((error:any) => {
-                                //DA UM ALERTA CASO OCORRA UM ERRO
-                                alert(error);
+                            //COLOCA ALERT NA TELA
+                            notifySucess('item atualizado com sucesso')
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
 
-                                //FINALIZA A PROMISSE ABORTANDO E PASSANDO O ERRO OCORRIDO COMO PARÂMETRO
-                                reject(error);
-                            });
+                        //MUDA O ESTADO DA APLICAÇÃO PARA false
+                        toggleLoading(false)
+
+                        //RESOLVE A PROMESSA PASSANDO A IMAGEM COMO PARÂMETRO
+                        resolve(url);
                     }
-                );
+                })
+                .catch(error => {
+                    console.error('Erro ao fazer upload:', error);
+                    reject(error)
+                });
             }
         });
     }

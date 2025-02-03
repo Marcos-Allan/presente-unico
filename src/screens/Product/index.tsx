@@ -180,7 +180,7 @@ export default function Product() {
             className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}
         >
             <Header />
-            <div className={`bg-my-white rounded-[16px] mt-5 flex items-center justify-center p-2 w-[80%] min-h-[400px] max-w-[900px]`}>
+            <div className={`bg-[#efefef] rounded-[16px] mt-5 flex items-center justify-center p-2 w-[80%] min-h-[400px] max-w-[900px]`}>
                 {products && (
                     <img
                         src={products[typeInd].img[productID]}
@@ -190,17 +190,19 @@ export default function Product() {
                 )}
             </div>
             
-            <div className={`w-full flex flex-row justify-around overflow-x-scroll scrollbar min-h-[180px] mt-3 max-w-[900px] scrollbar-none`}>
+            <p className={`text-my-secondary font-bold capitalize text-[24px] mt-6 mb-4 w-[80%]`}>tipos</p>
+
+            <div className={`w-[90%] flex flex-row justify-around overflow-x-scroll scrollbar min-h-[180px] mt-3 max-w-[900px] scrollbar-none`}>
             {products && products.length >= 1 && (
                 <>
                     {products[typeInd].type && products[typeInd].type.map((sla:any, i:number) => (
                         <div
-                            key={i} // Adicione uma key se estiver usando React
+                            key={i}
                             id={sla}
                             onClick={() => {
                                 setProductID(i);
                             }}
-                            className="w-auto mx-2 bg-my-white min-w-[120px] text-[12px] flex flex-col items-center justify-center py-2 px-4 rounded-[4px]"
+                            className="w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center py-1 px-4 rounded-[4px]"
                         >
                             <img
                                 src={products[typeInd].img[i]}
@@ -230,7 +232,7 @@ export default function Product() {
             )}
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-center mb-5 max-w-[900px]`}>
-                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>Quantidade</h1>
+                    <h1 className={`w-full ml-2 text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>Quantidade <span className={`text-my-primary text-[32px]`}>{quantity}</span><span className={`text-my-primary text-[24px]`}>x</span></h1>
                     {products && (
                         <>
                             <ChoiceQuantityCard
@@ -274,7 +276,7 @@ export default function Product() {
                         onClick={() => {
                             setModalQuantity(true)
                         }}
-                        className={`w-[30.8%] mb-2 bg-my-gray flex items-center flex-col justify-between mr-2 rounded-[8px] p-2`}
+                        className={`w-[30.8%] mb-2 bg-[#efefef] flex items-center flex-col justify-between mr-2 rounded-[8px] p-2`}
                     >
                         <div className={`rounded-[50%] border-[2px] border-my-secondary p-2`}>
                             <FaPlus className={`text-my-secondary`} />
@@ -309,7 +311,7 @@ export default function Product() {
             
             <h1 className={`w-[80%] text-my-secondary my-4 font-inter font-bold capitalize text-[24px] max-w-[900px]`}>descrição</h1>
 
-            <div className={`flex flex-col items-start justify-start w-[80%] bg-my-white p-4 rounded-[8px] mb-8 max-w-[900px]`}>
+            <div className={`flex flex-col items-start justify-start w-[80%] bg-[#efefef] p-4 pt-0 rounded-[8px] mb-8 max-w-[900px]`}>
                 <>
                     <p className={`mt-4 font-bold`}>Material:</p>
                     <p>{descriptions[typeInd].material}</p>

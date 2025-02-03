@@ -3,6 +3,7 @@ import { useContext, useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import axios from 'axios'
 import { toast } from 'react-toastify';
+import { Link } from 'react-router'
 
 //IMPORTAÇÃO DOS COMPONENTES
 import Header from "../../components/Header";
@@ -11,6 +12,7 @@ import ModalCart from '../../components/ModalCart';
 import ModalUser from '../../components/ModalUser';
 import ModalLogout from '../../components/ModalLogout';
 import LoadingPage from '../../components/LoadingPage';
+import ModalFinishBuy from '../../components/ModalFinishBuy';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
@@ -18,7 +20,11 @@ import { GlobalContext } from "../../provider/context";
 //IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../utils/firebase';
-import ModalFinishBuy from '../../components/ModalFinishBuy';
+
+//IMPORTAÇÃO DOS ÍCONES
+import { FaTrashAlt } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa6";
+import { FaEye } from "react-icons/fa";
 
 export default function EditProductCart() {
     //FAZ REFERENCIA A UM ELEMENTO
@@ -28,7 +34,7 @@ export default function EditProductCart() {
     const navigate = useNavigate()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { productSelectedEdit, user, toggleLoading, setCart }:any = useContext(GlobalContext);
+    const { productSelectedEdit, user, toggleLoading, setCart, toggleUser }:any = useContext(GlobalContext);
 
     //VARIÁVEIS IMUTÁVEIS
     const myName:any = productSelectedEdit.name
@@ -50,25 +56,8 @@ export default function EditProductCart() {
     const [products, setProducts] = useState<any>()
     const [typeInd, setTypeInd] = useState<number>(0)
 
-    //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
-    //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
-    // useEffect(() => {
-    //     if(productSelected.name == "Caneca"){
-    //         setTypeInd(0)
-    //     }else if(productSelected.name == "Camiseta"){
-    //         setTypeInd(1)
-    //     }else if(productSelected.name == "Almofada"){
-    //         setTypeInd(2)
-    //     }else if(productSelected.name == "Caderno"){
-    //         setTypeInd(3)
-    //     }else if(productSelected.name == "Agenda"){
-    //         setTypeInd(4)
-    //     }else if(productSelected.name == "Azulejo"){
-    //         setTypeInd(5)
-    //     }else if(productSelected.name == "Almochaveiro"){
-    //         setTypeInd(6)
-    //     }
-    // },[])
+    //const API_KEY = 649148382115836
+    //const API_SECRET = JGOB8jcqs0P3YZm_mEK5i2NFbrQ
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -76,6 +65,10 @@ export default function EditProductCart() {
             navigate('/sign-in')
         }
     },[user])
+
+    useEffect(() => {
+        localStorage.setItem('estampa-visu3d', myEstampa)
+    },[myEstampa])
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -125,6 +118,9 @@ export default function EditProductCart() {
 
             //COLOCA ALERT NA TELA
             notifySucess('item deletado com sucesso')
+
+            //SETA AS VARIÁVEIS DENTRO NO FRONTEND DA APLICAÇÃO
+            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
 
             //NAVEGA PARA A PÁGINA PRINCIPAL
             navigate('/perfil')
@@ -399,9 +395,16 @@ export default function EditProductCart() {
 
     return(
         <div className={`overflow-x-hidden`}>
-            <div className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}>
+            <div className={`bg-my-white w-screen min-h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-[#efefef]`}>
                 <Header />
-                <div className={`p-3 w-[80%] bg-my-gray flex items-center justify-center mt-4 rounded-[12px] max-w-[400px]`}>
+                <div className={`relative p-3 w-[80%] bg-[#efefef] flex items-center justify-center mt-4 rounded-[12px] max-w-[400px]`}>
+                    <Link
+                        to={'/model'}
+                        className={`absolute top-[-10px] right-[-10px] text-my-white bg-my-secondary rounded-[50%] p-2 text-[20px] border-[1px] hover:bg-my-white border-my-secondary hover:text-my-secondary transition-all duration-[.2s]`}
+                    >
+                        <FaEye/>
+                    </Link>
+
                     <img src={image} className={`w-full`} />
                 </div>
                 <p className={`underline text-my-secondary font-bold text-[24px] my-4 max-w-[700px]`}>{myName}</p>
@@ -409,39 +412,47 @@ export default function EditProductCart() {
                 <div className={`w-[80%] flex flex-row justify-between mt-4 max-w-[700px]`}>
                     
                     <label htmlFor="estampa" className={`${productSelectedEdit.name !== 'Camiseta' ? 'w-[100%]' : 'w-[47%]'} bg-my-white p-3 rounded-[8px] flex items-center flex-col relative`}>
-                        <p className={`absolute top-0 capitalize font-bold text-my-secondary text-center mb-1`}>estampa</p>
-                        <img src={myEstampa} alt="" className='mt-2 min-w-full' />
+                        <p className={`absolute top-0 capitalize font-bold text-my-secondary text-center`}>estampa</p>
+                        <img src={myEstampa} alt="" className='mt-5 min-w-full' />
                     </label>
 
                     <input ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
 
                     {productSelectedEdit.name == 'Camiseta' && (
                         <div
-                            onClick={() => {
-                                console.log('trocando')
-                                handleSize()
-                            }}
-                            className={`w-[47%] bg-my-white p-3 items-center justify-center rounded-[8px] flex flex-col max-w-[700px] relative`}
+                            className={`w-[47%] bg-[#efefef] p-3 items-center justify-center rounded-[8px] flex flex-col max-w-[700px] relative`}
                         >
                             <p className={`absolute top-0 capitalize font-bold text-my-secondary text-center mb-1`}>tamanho</p>
-                            <p className={`text-center text-my-secondary text-[34px] uppercase font-bold`}>{mySize}</p>
+                            <p
+                                onClick={() => {
+                                    handleSize()
+                                }}
+                                className={`text-center text-my-secondary text-[34px] uppercase font-bold`}
+                            >{mySize}</p>
                         </div>
                     )}
                 </div>
 
                 <div
-                    onClick={() => {
-                        handleMaterial()
-                    }}
-                    className={`w-[80%] flex flex-row bg-my-white p-3 rounded-[6px] mt-3 items-center justify-between font-bold capitalize max-w-[700px]`}
+                    className={`w-[80%] flex flex-row bg-[#efefef] p-3 rounded-[6px] mt-3 items-center justify-between font-bold capitalize max-w-[700px]`}
                 >
                     <p className={`text-my-secondary font-bold capitalize text-[20px]`}>material</p>
-                    <p className='text-my-primary text-[18px]'>{myMaterial}</p>
+                    <button
+                        onClick={() => {
+                            handleMaterial()
+                        }}
+                        className='text-my-primary text-[18px] bg-my-white py-2 w-[130px] rounded-[6px] text-center capitalize'
+                    >{myMaterial}</button>
                 </div>
                 
-                <div className={`w-[80%] flex flex-row bg-my-white p-3 rounded-[6px] mt-3 items-center justify-between font-bold max-w-[700px]`}>
+                <div className={`w-[80%] flex flex-row bg-[#efefef] p-3 rounded-[6px] mt-3 items-center justify-between font-bold max-w-[700px]`}>
                     <p className={`text-my-secondary font-bold capitalize text-[20px]`}>quantidade</p>
-                    <input type='number' value={myQuantity} onChange={handleQuantity} className='text-my-primary text-[18px] text-center w-[40px]' />
+                    <input
+                        type='number'
+                        value={myQuantity}
+                        onChange={handleQuantity}
+                        className='text-my-primary text-[18px] text-center bg-my-white py-2 w-[130px]'
+                    />
                 </div>
                 
                 <div className={`w-[90%] flex flex-row bg-my-white p-3 rounded-[6px] mt-5 items-center justify-between font-bold max-w-[700px]`}>
@@ -453,24 +464,34 @@ export default function EditProductCart() {
                     onClick={() => {
                         navigate('/principal')
                     }}
-                    className={`text-my-white font-bold bg-my-primary rounded-[8px] mt-5 text-[20px] px-5 py-2`}
-                >Continuar comprando</button>
+                    className={`text-my-white font-bold bg-my-primary uppercase rounded-[8px] mt-5 px-5 py-3 w-[80%] focus:outline-none focus:bg-transparent focus:text-my-primary border-[1px] border-my-primary flex items-center justify-around`}
+                >
+                    <p className={`flex-grow-[1]`}>continuar comprando</p>
+                </button>
                 <button
                     onClick={() => {
                         //CHAMA A FUNÇÃO QUE TROCA A IMAGEM E SALVA NO BD
                         handleUpload()
                     }}
-                    className={`text-my-white font-bold bg-my-secondary rounded-[8px] mt-3 mb-5 text-[18px] px-5 py-2`}
-                >Atualizar</button>
+                    className={`text-my-white font-bold bg-my-secondary uppercase rounded-[8px] mt-3 mb-5 py-3 w-[80%] focus:outline-none focus:bg-transparent focus:text-my-secondary border-[1px] border-my-secondary flex items-center justify-around`}
+                >
+                    <p className={`flex-grow-[1]`}>atualizar</p>
+                    <FaCheck
+                        className={`pr-3 text-[28px]`}
+                    />
+                </button>
                 
                 <button
                     onClick={() => {
                         //CHAMA A FUNÇÃO QUE REMOVE O ITEM DO CARRINHO
                         removeItem()
                     }}
-                    className={`text-my-white bg-red-600 uppercase font-bold px-4 py-2 my-2 rounded-[8px] mb-6`}
+                    className={`text-my-white bg-my-red uppercase font-bold py-3 my-2 rounded-[8px] mb-6 w-[80%] focus:outline-none focus:bg-transparent focus:text-my-red border-[1px] border-my-red flex items-center justify-around`}
                 >
-                    remover
+                    <p className={`flex-grow-[1]`}>remover</p>
+                    <FaTrashAlt
+                        className={`pr-3 text-[28px]`}
+                    />
                 </button>
 
                 <ModalCart />

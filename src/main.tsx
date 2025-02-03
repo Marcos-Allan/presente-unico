@@ -42,6 +42,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/forgout-password" element={<ForgoutPassword />} />
           <Route path="/verify-code" element={<VerifyCode />} />
           <Route path="/switch-password" element={<SwitchPassword />} />
+          
           <Route path="/principal" element={<Principal />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="product/:product" element={<Product />} />

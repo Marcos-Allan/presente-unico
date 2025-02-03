@@ -89,13 +89,13 @@ export default function Principal() {
             
             <CarouselComponent images={[img, img2]} />
             
-            <div className={`mt-6 w-[80%] flex items-center justify-center text-my-secondary font-bold font-inter max-w-[900px]`}>
+            <div className={`w-[90%] flex items-center justify-center text-my-secondary font-bold font-inter max-w-[900px]`}>
                 <div className="hidden sm:block flex-grow-[1] bg-my-secondary h-[3px]"></div>
                 <p className="mr-2 sm:ml-2 text-[22px]">Produtos</p>
                 <div className="flex-grow-[1] bg-my-secondary h-[3px]"></div>
             </div>
 
-            <div className="flex items-start justify-center flex-wrap py-4 w-[80%] relative max-w-[900px]">
+            <div className="flex items-start justify-center flex-wrap py-4 w-[100%] relative max-w-[900px]">
 
                 <ProductCard
                     image={caneca}

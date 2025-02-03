@@ -158,8 +158,8 @@ export default function SiwtchPassword() {
 
     return(
         <div className={`overflow-x-hidden`}>
-            <div className={`w-screen min-h-screen bg-my-white overflow-x-hidden px-10 sm:px-0 flex flex-col items-center`}>
-                <Header />
+            <Header />
+            <div className={`w-screen min-h-[35vh] pb-20 bg-my-white overflow-x-hidden px-10 sm:px-0 flex flex-col items-center`}>
                 <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Troque sua senha</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>Crie sua nova senha</p>
                 

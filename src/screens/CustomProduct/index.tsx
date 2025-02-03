@@ -21,7 +21,7 @@ import { AiFillPicture, AiFillFileImage } from "react-icons/ai"
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa6";
 
 //IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
-import { ref, uploadBytesResumable, getDownloadURL, listAll } from 'firebase/storage';
+import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { storage } from '../../utils/firebase';
 
 export default function CustomProduct() {
@@ -263,95 +263,67 @@ export default function CustomProduct() {
                     console.log('erro: ', error)
                 })
             } else {
-                const storageRef = ref(storage, `images/estampas/${String(Math.floor(Math.random() * 99999999999999))}`);
-                const uploadTask = uploadBytesResumable(storageRef, file);
+                //CÓDIGO CLOUDINARY
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'present'); //presente-unico
+                formData.append('cloud_name', 'dgvxpeu0a'); //dgvxpeu0a
+                formData.append('folder', 'images/estampas'); // Exemplo de pasta
+                formData.append('public_id', 'custom_public_id'); // Exemplo de public ID
 
-                uploadTask.on(
-                    "state_changed",
-                    (snapshot:any) => {
-                        //PEGA A PORCENTAGEM DO UPLOAD DA IMAGEM
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log(progress)
-                    },
-                    (error:any) => {
-                        //DA UM ALERTA CASO OCORRA UM ERRO
-                        alert(error);
-                        
-                        //FINALIZA A PROMISSE ABORTANDO E PASSANDO O ERRO OCORRIDO COMO PARÂMETRO
-                        reject(error);
-                    },
-                    () => {
-                        //PEGA A URL DA IMAGEM QUE FOI SALVA NO BANCO DE DADOS
-                        getDownloadURL(uploadTask.snapshot.ref)
-                            .then((url:any) => {
-                                //SETA A URL DA IMAGEM
-                                setImgURL(url);
+                axios.post('https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload', formData)
+                .then(response => {
+                    if (response.data.secure_url) {
+                        const url = response.data.secure_url;
+
+                        localStorage.setItem('estampa-visu3d', url)
+
+                        //SETA A URL DA IMAGEM
+                        setImgURL(url);
                                 
-                                //ESCREVE A URL DA IMAGEM NO CONSOLE
-                                console.log('imagem salva: '+ url)
+                        //ESCREVE A URL DA IMAGEM NO CONSOLE
+                        console.log('imagem salva: '+ url)
 
-                                //PEGA A URL DA IMAGEM
-                                setImg(url);
+                        //PEGA A URL DA IMAGEM
+                        setImg(url);
 
-                                //GERA UM ID ALEATÓRIO
-                                const id = Math.floor(Math.random() * 99999)
+                        //GERA UM ID ALEATÓRIO
+                        const id = Math.floor(Math.random() * 99999)
 
-                                //ADICIONA ITEM AO CARRINHO
-                                // addToCart({
-                                //     id: id,
-                                //     image: productSelected.image,
-                                //     name: productSelected.name,
-                                //     price: Number(productSelected.prices),
-                                //     quantity: productSelected.quantity,
-                                //     estampa: url,
-                                //     size: size,
-                                //     material: productSelected.material,
-                                //     color: color,
-                                //     colors: products[typeInd].colors[productID],
-                                //     types: products[typeInd].type
-                                // })
+                        //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
+                        axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {
+                            userId: user.id,
+                            produto: {
+                                id: id,
+                                image: productSelected.image,
+                                name: productSelected.name,
+                                price: Number(productSelected.prices),
+                                quantity: productSelected.quantity,
+                                estampa: url,
+                                size: size,
+                                material: productSelected.material,
+                                color: color,
+                                colors: products[typeInd].colors[productID],
+                                types: products[typeInd].type
+                            }
+                        })
+                        .then(function (response) {
+                            //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
+                            console.log(response.data)
 
-                                //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
-                                axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {
-                                    userId: user.id,
-                                    produto: {
-                                        id: id,
-                                        image: productSelected.image,
-                                        name: productSelected.name,
-                                        price: Number(productSelected.prices),
-                                        quantity: productSelected.quantity,
-                                        estampa: url,
-                                        size: size,
-                                        material: productSelected.material,
-                                        color: color,
-                                        colors: products[typeInd].colors[productID],
-                                        types: products[typeInd].type
-                                    }
-                                })
-                                .then(function (response) {
-                                    //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
-                                    console.log(response.data)
-
-                                    toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
-                                    setCart(response.data.cart)
-                                    // id:any, name:string, email:string, history:any, cart:any, logged:boolean)
-                                })
-                                .catch(function (error) {
-                                    console.log('erro: ', error)
-                                })
-
-                                //RESOLVE A PROMESSA PASSANDO A IMAGEM COMO PARÂMETRO
-                                resolve(url);
-                            })
-                            .catch((error:any) => {
-                                //DA UM ALERTA CASO OCORRA UM ERRO
-                                alert(error);
-
-                                //FINALIZA A PROMISSE ABORTANDO E PASSANDO O ERRO OCORRIDO COMO PARÂMETRO
-                                reject(error);
-                            });
+                            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+                            setCart(response.data.cart)
+                            // id:any, name:string, email:string, history:any, cart:any, logged:boolean)
+                        })
+                        .catch(function (error) {
+                            console.log('erro: ', error)
+                        })
                     }
-                );
+                })
+                .catch(error => {
+                    console.error('Erro ao fazer upload:', error);
+                    reject(error)
+                });
             }
         });
     }
@@ -365,10 +337,10 @@ export default function CustomProduct() {
     const notifySucess = (message:string) => toast.success(message);
 
     return(
-        <div className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}
+        <div className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-[#efefef]`}
         >
             <Header />
-            <div className={`bg-my-gray w-[95%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
+            <div className={`bg-[#efefef] w-[95%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
                 <h1 className={`mt-5 text-[20px] font-bold text-my-secondary`}>Vamos criar sua {productSelected && productSelected.name}</h1>
                 
                 <div className={`mt-3 mb-5 w-[80%] h-[3px] bg-my-secondary`}></div>
@@ -379,9 +351,9 @@ export default function CustomProduct() {
                     <label
                         onClick={() => setPrint('my')}
                         htmlFor="estampa"
-                        className={`w-[47.5%] bg-my-gray flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
+                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
                     >
-                        <p className={`text-[18px] font-bold text-my-secondary text-center`}>escolha sua estampa</p>
+                        <p className={`text-[18px] font-bold text-my-secondary text-center`}>Escolha sua estampa</p>
                         <AiFillPicture className={`mt-2 text-my-secondary text-[48px]`}/>
                     </label>
 
@@ -392,9 +364,9 @@ export default function CustomProduct() {
                             setImgURL(arrayEstampas[indPreEstampa])
                             setPrint('other')
                         }}
-                        className={`w-[47.5%] bg-my-gray flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
+                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
                     >
-                        <p className={`text-[18px] font-bold text-my-secondary text-center`}>estampa pré pronta</p>
+                        <p className={`text-[18px] font-bold text-my-secondary text-center`}>Estampa pré pronta</p>
                         <AiFillFileImage className={`mt-2 text-my-secondary text-[48px]`}/>
                     </button>
 
@@ -444,7 +416,7 @@ export default function CustomProduct() {
                 )}
 
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-start gap-4 mb-5`}>
-                    <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary`}>Selecione a cor</h1>
+                    <h1 className={`w-full text-left text-[18px] font-bold text-my-secondary`}>Selecione a cor</h1>
 
                     {products && products[typeInd].colors[productID].map((materialColor:string) => (
                         <div
@@ -458,7 +430,7 @@ export default function CustomProduct() {
                 </div>
                 
             </div>
-            <div className={`my-5 w-[90%] bg-my-gray p-4 font-bold rounded-[8px] max-w-[900px]`}>
+            <div className={`my-5 w-[90%] bg-[#efefef] p-4 font-bold rounded-[8px] max-w-[900px]`}>
                 {products && (
                     <p className={`text-my-secondary text-[24px]`}>Valor <span className={`text-my-primary`}>R${String(Number(Number(productSelected.prices.replace(',','.')) * productSelected.quantity).toFixed(2)).replace('.', ',')}</span></p>
                 )}
@@ -470,7 +442,7 @@ export default function CustomProduct() {
                     
                     handleUpload()
                 }}
-                className={`${btnActive == true ? 'bg-my-primary' : 'bg-my-gray'} text-white py-3 rounded-[8px] w-[70%] mb-32 text-[20px] font-bold max-w-[900px]`}
+                className={`${btnActive == true ? 'bg-my-primary' : 'bg-[#efefef]'} text-white py-3 rounded-[8px] w-[70%] mb-32 text-[20px] font-bold max-w-[900px]`}
             >
                 Adicionar ao carrinho
             </button>

@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+* {
+  font-family: 'Inter', cursive;
+}
+
 #root {
   width: 100vw;
   height: 100vh;

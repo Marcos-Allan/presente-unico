@@ -18,10 +18,10 @@ export default function Home() {
             >
                 <img src={img} className={`max-w-[300px]`} alt="" />
                 <div className={`flex-grow-[1]`}>
-                    <p className={`text-my-black text-[30px] text-center mb-4`}>
+                    <p className={`text-my-black text-[30px] text-center mb-8`}>
                         Bem vindo a nossa loja de presentes personalizados
                     </p>
-                    <p className={`text-my-black text-[30px] text-center mb-4`}>
+                    <p className={`text-my-black text-[30px] text-center mb-8`}>
                         Aqui você consegue modificar o modelo e a estampa de seu produto.
                     </p>
                 </div>

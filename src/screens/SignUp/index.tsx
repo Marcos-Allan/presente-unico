@@ -231,7 +231,7 @@ export default function SignUp() {
                 <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Crie sua conta</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>Vamos criar sua conta</p>
 
-                <form className={`w-full`}>
+                <form className="w-full flex flex-col items-center">
                     <Input
                         label={'Nome completo'}
                         placeholder={'Coloque seu nome completo'}

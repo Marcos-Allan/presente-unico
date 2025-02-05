@@ -341,7 +341,7 @@ export default function CustomProduct() {
     const notifySucess = (message:string) => toast.success(message);
 
     return(
-        <div className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-[#efefef]`}
+        <div className={`bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-[#efefef]`}
         >
             <Header />
             <div className={`bg-[#efefef] w-[95%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
@@ -422,8 +422,9 @@ export default function CustomProduct() {
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-start gap-4 mb-5`}>
                     <h1 className={`w-full text-left text-[18px] font-bold text-my-secondary`}>Selecione a cor</h1>
 
-                    {products && products[typeInd].colors[productID].map((materialColor:string) => (
+                    {products && products[typeInd].colors[productID].map((materialColor:string, i:number) => (
                         <div
+                            key={i}
                             onClick={() => setColor(materialColor)}
                             style={{ backgroundColor: materialColor }}
                             className={`w-[60px] h-[60px] rounded-[6px] ${color == materialColor && 'scale-[1.2]'} border-[1px] border-my-black`}
@@ -446,7 +447,7 @@ export default function CustomProduct() {
                     
                     handleUpload()
                 }}
-                className={`${btnActive == true ? 'bg-my-primary' : 'bg-[#efefef]'} text-white py-3 rounded-[8px] w-[70%] mb-32 text-[20px] font-bold max-w-[900px]`}
+                className={`${btnActive == true ? 'bg-my-primary' : 'bg-[#efefef]'} text-white py-4 rounded-[8px] w-[90%] mb-10 text-[20px] font-bold max-w-[900px]`}
             >
                 Adicionar ao carrinho
             </button>

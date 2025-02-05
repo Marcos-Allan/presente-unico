@@ -26,7 +26,7 @@ export default function ModalUser() {
                     }}
                 >
                     <div
-                        className={`bg-[#ffffff] w-[270px] h-[250px] absolute right-[42px] top-[36px] rounded-[12px] z-[6] p-2 pt-10`}
+                        className={`bg-[#ffffff] w-[270px] h-[250px] absolute mr-[15.1%] right-[0px] top-[36px] rounded-[12px] z-[6] p-2 pt-10`}
                         onClick={(e) => {
                             //EVITA A PROPAGAÇÃO DOS EVENTOS DE CLIQUE DOS BOTÕES
                             e.stopPropagation()

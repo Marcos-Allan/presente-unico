@@ -39,7 +39,10 @@ export default function Principal() {
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR O PRODUTO SELECIONADO
     function selectProduct(image:string, name:string, price:string, materials:any) {
+        //SETA O PRODUTO SELECIONADO NA VARIAVEL GLOBAL DE EDIÇÃO DE PRODUTO
         setProductSelected({ image: image, name:name, price:price, materials:materials })
+        
+        //REDIRECIONA O USUÁRIO PARA A PÁGINA DO PRODUTO
         navigate(`/product/${name.toLowerCase()}`)
     }
 
@@ -62,13 +65,16 @@ export default function Principal() {
             //ESCREVE NO CONSOLE AS URLS DAS IMAGENS
             console.log(urls)
         } catch (error) {
+            //ESCREVE O ERRO NO CONSOLE
             console.error('Erro ao listar imagens:', error);
         }
     };
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
+        //VERIFICA SE O USUÁRIO ESTÁ LOGADO
         if(user.logged == false) {
+            //NAVEGA PARA A PÁGINA DE LOGIN
             navigate('/sign-in')
         }
     },[user])
@@ -89,7 +95,7 @@ export default function Principal() {
             
             <CarouselComponent images={[img, img2]} />
             
-            <div className={`w-[90%] flex items-center justify-center text-my-secondary font-bold font-inter max-w-[900px]`}>
+            <div className={`w-[80%] flex items-center justify-center text-my-secondary font-bold font-inter max-w-[900px]`}>
                 <div className="hidden sm:block flex-grow-[1] bg-my-secondary h-[3px]"></div>
                 <p className="mr-2 sm:ml-2 text-[22px]">Produtos</p>
                 <div className="flex-grow-[1] bg-my-secondary h-[3px]"></div>

@@ -8,10 +8,10 @@ import Header from "../../components/Header";
 import ModalCart from '../../components/ModalCart';
 import ModalUser from '../../components/ModalUser';
 import ModalLogout from '../../components/ModalLogout';
+import ModalFinishBuy from '../../components/ModalFinishBuy';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
-import ModalFinishBuy from '../../components/ModalFinishBuy';
 
 export default function Perfil() {
     //UTILIZAÇÃO DO HOOK DE NAVEGAÇÃO DO react-router-dom
@@ -22,7 +22,9 @@ export default function Perfil() {
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
+        //VERIFICA SE O USUÁRIO ESTÁ LOGADO
         if(user.logged == false) {
+            //REDIRECIONA O USUÁRIO PARA A PÁGINA DE LOGIN
             navigate('/sign-in')
         }
     },[user])
@@ -31,9 +33,9 @@ export default function Perfil() {
         <div className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}>
             <Header />
             <div className='w-full px-2 py-5 max-w-[900px]'>
-                <p>Nome do usuário: <span className={`font-bold`}>{user.name}</span></p>
-                <p>Email do usuário: <span className={`font-bold`}>{user.email}</span></p>
-                <p className={`font-bold`}>Histórico de compras do usuário:</p>
+                <p>Nome: <span className={`font-bold`}>{user.name}</span></p>
+                <p>Email: <span className={`font-bold`}>{user.email}</span></p>
+                <p className={`font-bold`}>Histórico de compras:</p>
                 
                 {user.history.map((compra:any) => (
                     <div className={`flex flex-row items-center justify-between bg-my-white my-2 w-[90%] mx-auto p-2 rounded-[8px] relative`}>

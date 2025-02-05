@@ -8,7 +8,10 @@ interface Props {
 
 export default function ProductCard(props: Props) {
 
+    //SEPARA O PREÇO PEGANDO OS REAIS REMOVENDO OS CENTAVOS
     const price1 = props.price.split(',')[0]
+    
+    //SEPARA O PREÇO PEGANDO OS CENTAVOS REMOVENDO OS REAIS
     const price2 = props.price.split(',')[1]
 
     return(

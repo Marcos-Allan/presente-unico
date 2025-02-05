@@ -1,9 +1,12 @@
+//IMPORTAÇÃO DAS BIBLIOTECAS
 import {
     ContactShadows,
     Environment,
     Float,
     OrbitControls,
   } from "@react-three/drei";
+
+  //IMPORTAÇÃO DOS COMPONENTES
   import { Mug } from "../Mug/";
   // import { MugC } from "../Mug-c/";
   

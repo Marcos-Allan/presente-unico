@@ -59,6 +59,7 @@ export default function SignIn() {
             //MUDA O ESTADO DA APLICAÇÃO PARA false
             toggleLoading(false)
 
+            //VERIFICA SE O TIPO RETORNADO DA REQUISIÇÃO É UM OBJETO
             if(typeof response.data === 'object'){
 
                 //CHAMA O MODAL DE SUCESSO
@@ -73,17 +74,22 @@ export default function SignIn() {
 
         })
         .catch(function (error) {
+            //ESCREVE O ERRO NO CONSOLE
             console.log(error)
         })
     }
 
     //FUNÇÃO RESPONSÁVEL POR SALVAR  O VALOR DO INPUT   
     function handleEmailInput(e:ChangeEvent<HTMLInputElement>) {
+        //SETA O ESTADO DO INPUT DE EMAIL COM undefined
         setEmailValid(undefined)
+
+        //SETA O EMAIL COM BASE NO TEXTO DIGITADO NO INPUT
         setEmail(e.target.value)
 
-        //CANCELA O TIMER ANTERIOR
+        //VERIFICA SE TEM TIMER ATIVO
         if (timeoutIdEmail) {
+            //CANCELA O TIMER ANTERIOR
             clearTimeout(timeoutIdEmail);
         }
 
@@ -98,11 +104,15 @@ export default function SignIn() {
     }
     
     function handlePasswordInput(e:ChangeEvent<HTMLInputElement>) {
+        //SETA O ESTADO DO INPUT DE SENHA COM undefined
         setPasswordValid(undefined)
+
+        //SETA A SENHA COM BASE NO TEXTO DIGITADO NO INPUT
         setPassword(e.target.value)
 
-        //CANCELA O TIMER ANTERIOR
+        //VERIFICA SE TEM TIMER ATIVO
         if (timeoutIdPassword) {
+            //CANCELA O TIMER ANTERIOR
             clearTimeout(timeoutIdPassword);
         }
 
@@ -123,12 +133,15 @@ export default function SignIn() {
 
         //VERIFICA SE O EMAIL ESTÁ VAZIO
         if(email.length >= 0 && email.length < 16){
+            //SETA O ESTADO DO INPUT DE EMAIL COMO undefined
             setEmailValid(undefined)
         }else{
             //VERIFICA SE O VALOR DO INPUT ESTÁ ENTRO DO PADRÃO DO REGEX
             if(padraoEmail.test(email) == true) {
+                //SETA O ESTADO DO INPUT DE EMAIL COMO true
                 setEmailValid(true)
             }else{
+                //SETA O ESTADO DO INPUT DE EMAIL COMO false
                 setEmailValid(false)
             }
         }
@@ -144,8 +157,10 @@ export default function SignIn() {
         }else{
             //VERIFICA SE O VALOR DO INPUT ESTÁ ENTRO DO PADRÃO DO REGEX
             if(padraoPassword.test(password) == true) {
+                //SETA O ESTADO DO INPUT DE SENHA COMO true
                 setPasswordValid(true)
             }else{
+                //SETA O ESTADO DO INPUT DE SENHA COMO false
                 setPasswordValid(false)
             }
         }
@@ -155,8 +170,10 @@ export default function SignIn() {
     useEffect(() => {
         //VERIFICA SE OS ESTADOS DDOS INPUTS ESTÃO CORRETOS
         if(emailValid == true && passwordValid == true){
+            //SETA O ESTADO DO BOTÃO COMO true
             setBtnValid(true)
         }else{
+            //SETA O ESTADO DO BOTÃO COMO false
             setBtnValid(false)
         }
     },[emailValid, passwordValid])
@@ -168,25 +185,28 @@ export default function SignIn() {
                 <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Faça login com sua conta</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>È bom ter você novamente!</p>
                 
-                <Input
-                    label={'Email'}
-                    placeholder={'Coloque seu endereço de email'}
-                    validate={emailValid}
-                    value={email}
-                    onChange={handleEmailInput}
-                />
-                
-                <Input
-                    label={'Senha'}
-                    placeholder={'Coloque sua senha'}
-                    type={'password'}
-                    validate={passwordValid}
-                    value={password}
-                    onChange={handlePasswordInput}
-                />
+                <form className='w-full'>
+                    <Input
+                        label={'Email'}
+                        placeholder={'Coloque seu endereço de email'}
+                        validate={emailValid}
+                        value={email}
+                        onChange={handleEmailInput}
+                        ind={'email'}
+                    />
+                    
+                    <Input
+                        label={'Senha'}
+                        placeholder={'Coloque sua senha'}
+                        type={'password'}
+                        validate={passwordValid}
+                        value={password}
+                        onChange={handlePasswordInput}
+                        ind={'current-password'}
+                    />
 
-                <Button text={'Login'} validate={btnValid} event={() => signIn()} />
-
+                    <Button text={'Login'} validate={btnValid} event={() => signIn()} />
+                </form>
                 <Divider />
 
                 <GoogleLogin />

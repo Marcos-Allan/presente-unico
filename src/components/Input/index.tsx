@@ -8,6 +8,7 @@ interface Props {
     validate: Boolean | undefined,
     type?: String,
     value: any,
+    ind: string,
     onChange: (e:React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -36,6 +37,7 @@ export default function Input(props: Props) {
             >{props.label}</label>
             <div className='relative flex items-center justify-center'>
                 <input
+                    autoComplete={props.ind}
                     type={props.type ? `${visible == true ? 'text' : 'password'}` : 'text'}
                     className={`
                         px-3 py-5 w-full border-[1px] font-inter rounded-[12px] font-bold mt-2 mb-4 outline-none
@@ -54,8 +56,6 @@ export default function Input(props: Props) {
                         placeholder:font-bold
                         placeholder:font-inter
                     `}
-                    name=""
-                    id=""
                     placeholder={`${props.placeholder}`}
                     value={props.value}
                     onChange={props.onChange}

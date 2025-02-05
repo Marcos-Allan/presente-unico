@@ -67,17 +67,23 @@ export default function ForgoutPassword() {
 
         })
         .catch(function (error) {
+            //ESCREVE O ERRO NO CONSOLE
             console.log(error)
         })
     }
 
     //FUNÇÃO RESPONSÁVEL POR SALVAR  O VALOR DO INPUT   
     function handleEmailInput(e:ChangeEvent<HTMLInputElement>) {
+        
+        //SETA O ESTADO DO INPUT DE EMAIL COM undefined
         setEmailValid(undefined)
+        
+        //SETA O EMAIL COM BASE NO TEXTO DIGITADO NO INPUT
         setEmail(e.target.value)
 
-        //CANCELA O TIMER ANTERIOR
+        //VERIFICA SE TEM TIMER ATIVO
         if (timeoutIdEmail) {
+            //CANCELA O TIMER ANTERIOR
             clearTimeout(timeoutIdEmail);
         }
 
@@ -98,12 +104,15 @@ export default function ForgoutPassword() {
 
         //VERIFICA SE O EMAIL ESTÁ VAZIO
         if(email.length >= 0 && email.length < 16){
+            //SETA O ESTADO DO INPUT DE EMAIL COMO undefined
             setEmailValid(undefined)
         }else{
             //VERIFICA SE O VALOR DO INPUT ESTÁ ENTRO DO PADRÃO DO REGEX
             if(padraoEmail.test(email) == true) {
+                //SETA O ESTADO DO INPUT DE EMAIL COMO true
                 setEmailValid(true)
             }else{
+                //SETA O ESTADO DO INPUT DE EMAIL COMO false
                 setEmailValid(false)
             }
         }
@@ -113,8 +122,10 @@ export default function ForgoutPassword() {
     useEffect(() => {
         //VERIFICA SE OS ESTADOS DDOS INPUTS ESTÃO CORRETOS
         if(emailValid == true){
+            //SETA O ESTADO DO BOTÃO COMO true
             setBtnValid(true)
         }else{
+            //SETA O ESTADO DO BOTÃO COMO false
             setBtnValid(false)
         }
     },[emailValid])
@@ -126,15 +137,18 @@ export default function ForgoutPassword() {
                 <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Recupere sua conta</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>Informe o seu email</p>
                 
-                <Input
-                    label={'Email'}
-                    placeholder={'Coloque seu endereço de email'}
-                    validate={emailValid}
-                    value={email}
-                    onChange={handleEmailInput}
-                />
+                <form className="w-full">
+                    <Input
+                        label={'Email'}
+                        placeholder={'Coloque seu endereço de email'}
+                        validate={emailValid}
+                        value={email}
+                        onChange={handleEmailInput}
+                        ind="email"
+                    />
 
-                <Button text={'Enviar'} validate={btnValid} event={() => forgoutPassword()} />
+                    <Button text={'Enviar'} validate={btnValid} event={() => forgoutPassword()} />
+                </form>
 
                 <p className={`text-center max-w-[700px] mb-5 mt-20 font-bold text-my-secondary text-[18px]`}>
                     Já tem uma conta?

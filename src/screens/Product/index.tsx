@@ -190,9 +190,13 @@ export default function Product() {
                 )}
             </div>
             
-            <p className={`text-my-secondary font-bold capitalize text-[24px] mt-6 mb-4 w-[80%]`}>tipos</p>
+            <div className={`w-[80%] flex items-center justify-center text-my-secondary font-bold font-inter max-w-[900px] mt-6 mb-4`}>
+                <div className="hidden sm:block flex-grow-[1] bg-my-secondary h-[3px]"></div>
+                <p className="mr-2 sm:ml-2 capitalize text-[24px]">tipos</p>
+                <div className="flex-grow-[1] bg-my-secondary h-[3px]"></div>
+            </div>
 
-            <div className={`w-[90%] flex flex-row justify-around overflow-x-scroll scrollbar min-h-[180px] mt-3 max-w-[900px] scrollbar-none`}>
+            <div className={`w-[85%] flex flex-row justify-around overflow-x-scroll scrollbar scrollbar-none min-h-[180px] mt-3 max-w-[900px]`}>
             {products && products.length >= 1 && (
                 <>
                     {products[typeInd].type && products[typeInd].type.map((sla:any, i:number) => (
@@ -202,13 +206,15 @@ export default function Product() {
                             onClick={() => {
                                 setProductID(i);
                             }}
-                            className="w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center py-1 px-4 rounded-[4px]"
+                            className="w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center  rounded-[4px]"
                         >
-                            <img
-                                src={products[typeInd].img[i]}
-                                className="w-[120px]"
-                            />
-                            <p className="mt-1 font-bold text-my-secondary">{products[typeInd].type[i]}</p>
+                            <div className={`flex-grow-[1] flex items-center justify-center`}>
+                                <img
+                                    src={products[typeInd].img[i]}
+                                    className="w-[120px] p-1"
+                                />
+                            </div>
+                            <p className="mt-1 w-full text-center pb-5 font-bold text-my-secondary">{products[typeInd].type[i]}</p>
                         </div>
                     ))}
                 </>

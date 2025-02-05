@@ -21,6 +21,7 @@ import { GlobalContext } from "../../provider/context";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
+import { FaRegImage } from "react-icons/fa6";
 
 export default function EditProductCart() {
     //FAZ REFERENCIA A UM ELEMENTO
@@ -44,6 +45,7 @@ export default function EditProductCart() {
     const [productID, setProductID] = useState<number>(0)
     const [img, setImg] = useState<string>('')
     const [image, setImage] = useState<any>('')
+    const [isHover, setIsHover] = useState<boolean>(false)
 
     //ARRAY DE POSSIBILIDADES DAS PROPS DO PRODUTOS
     const [sizes, setSizes] = useState<any>([productSelectedEdit.types])
@@ -58,7 +60,8 @@ export default function EditProductCart() {
             navigate('/sign-in')
         }
     },[user])
-
+    
+    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         localStorage.setItem('estampa-visu3d', myEstampa)
     },[myEstampa])
@@ -96,6 +99,11 @@ export default function EditProductCart() {
             setSizes(['pp'])
         }
     },[productSelectedEdit])
+
+    //FUNÇÃO RESPONSÁVEL POR TROCAR O ESTADO DE isHover
+    function toggleHover(state:boolean) {
+        setIsHover(state)
+    }
 
     //FUNÇÃO RESPONSÁVEL POR REMOVER ITEM DO CARRINHO
     function removeItem() {
@@ -168,15 +176,12 @@ export default function EditProductCart() {
             console.log(error)
         })
     }
-
+    
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         //CHAMA A FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
         getProducts()
-    },[])
 
-    //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
-    useEffect(() => {
         //CHAMA A FUNÇÃO QUE PEGA O ID DO PRODUTO
         getIndice()
 
@@ -201,36 +206,38 @@ export default function EditProductCart() {
     },[productSelectedEdit])
 
     const handleSize = () => {
-        // Verifica se o array 'sizes' não está vazio
+        //VERIFICA SE O ARRAY 'sizes NÃO ESTÁ VAZIO
         if (sizes.length === 0) {
             console.error("O array de tamanhos está vazio!");
             return;
         }
     
-        // Obtém o índice atual de 'mySize' no array 'sizes'
+        //OBTÉM O ÍNDICE ATUAL DE 'mySize' NO ARRAY 'sizes
         const currentIndex = sizes.indexOf(mySize);
     
-        // Se o índice atual for inválido (-1), define o próximo como o primeiro
+        //SE O ÍNDICE ATUAL FOR INVÁLIDO (-1), DEFINE O PRÓXIMO COMO O PRIMEIRO
         const nextIndex = currentIndex === -1 || currentIndex === sizes.length - 1
-            ? 0 // Volta para o primeiro índice
+            ? 0 //VOLTA PARA O PRIMEIRO ÍNDICE
             : currentIndex + 1;
     
-        // Atualiza o estado para o próximo tamanho
+        //ATUALIZA O ESTADO PARA O PRÓXIMO TAMANHO
         setMySize(sizes[nextIndex]);
     };
     
     const handleMaterial = () => {
-        // Obtém o índice atual da escolha
+        //OBTÉM O ÍNDICE ATUAL DA ESCOLHA
         const currentIndex = materiais.indexOf(myMaterial);
     
-        // Calcula o próximo índice (volta ao início se for o último)
+        //CALCULA O PRÓXIMO ÍNDICE (VOLTA AO INÍCIO SE FOR O ÚLTIMO)
         const nextIndex = (currentIndex + 1) % materiais.length;
     
-        // Atualiza o estado com o próximo material e define o productID
+        //ATUALIZA O ESTADO COM O PRÓXIMO MATERIAL E DEFINE O productID
         setMyMaterial(materiais[nextIndex]);
 
+        //ATUALIZA O PREÇO DO PRODUTO COM BASE NO productID
         setMyPrice(products[typeInd].prices[nextIndex])
-
+        
+        //ATUALIZA A IMAGEM DO PRODUTO COM BASE NO productID
         setImage(products[typeInd].img[nextIndex])
 
         //ATUALIZA O INDICE DO PRODUTO
@@ -330,7 +337,6 @@ export default function EditProductCart() {
                     console.log(error)
                 })
             } else {
-                //CÓDIGO CLOUDINARY
                 
                 //GERA UM ID ALEATÓRIO
                 const id = Math.floor(Math.random() * 99999)
@@ -342,12 +348,14 @@ export default function EditProductCart() {
                 formData.append('folder', 'images/estampas'); // Exemplo de pasta
                 formData.append('public_id', String(id)); // Exemplo de public ID
                 
-
+                //ROTA DE UPLOAD DE IMAGEM NO CLOUDNARY
                 axios.post('https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload', formData)
                 .then(response => {
                     if (response.data.secure_url) {
+                        //PEGA A URL FORNECIDA PELO CLOUDNARY
                         const url = response.data.secure_url;
 
+                        //SETA NO localStorage A ESTAMPA DO CLOUDNARY
                         localStorage.setItem('estampa-visu3d', url)
 
                         //SETA A URL DA IMAGEM
@@ -359,6 +367,7 @@ export default function EditProductCart() {
                         //PEGA A URL DA IMAGEM
                         setImg(url);
 
+                        //ATUALIZA A URL DO PRODUTO A SER EDITADO COM A URL DO CLOUDNARY
                         setProductSelectedEdit({
                             id: productSelectedEdit.id,
                             image: productSelectedEdit.image,
@@ -386,7 +395,7 @@ export default function EditProductCart() {
                             }
                         })
                         .then(function (response) {
-                            //ATUALIZA OS DADOS DOD USUÁRIO
+                            //ATUALIZA OS DADOS DO USUÁRIO
                             toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
                             
                             //ATUALIZA O CARRINHO
@@ -407,17 +416,24 @@ export default function EditProductCart() {
                     }
                 })
                 .catch(error => {
+                    //ESCREVE O ERRO NO CONSOLE
                     console.error('Erro ao fazer upload:', error);
+
+                    //REJEITA O ERRO OCORRIDO
                     reject(error)
                 });
             }
         });
     }
 
+    //FUNÇÃO RESPONSÁVEL POR MUDAR A QUANTIDADE DO PRODUTO
     function handleQuantity(e:any) {
-        if(Number(e.target.value) <= 1){
-            setMyQuantity(1)
+        //VERIFICA SE A QUANTIDADE DO PRODUTO É MENOR OU IGUAL A 0
+        if(Number(e.target.value) <= 0){
+            //SETA A QUANTIDADE DE PRODUTO COMO 0
+            setMyQuantity(0)
         }else{
+            //SETA A QUANTIDADE DE PRODUTO COM BASE NO QUE ELE DIGITA NO INPUT
             setMyQuantity(e.target.value)
         }
     }
@@ -443,9 +459,21 @@ export default function EditProductCart() {
                 
                 <div className={`w-[80%] flex flex-row justify-between mt-4 max-w-[700px]`}>
                     
-                    <label htmlFor="estampa" className={`${productSelectedEdit.name !== 'Camiseta' ? 'w-[100%]' : 'w-[47%]'} bg-my-white p-3 rounded-[8px] flex items-center flex-col relative`}>
+                    <label
+                        htmlFor="estampa"
+                        className={`${productSelectedEdit.name !== 'Camiseta' ? 'w-[100%]' : 'w-[47%]'} bg-my-white p-3 rounded-[8px] flex items-center flex-col relative cursor-pointer`}
+                        onMouseEnter={() => toggleHover(true)}
+                        onMouseLeave={() => toggleHover(false)}
+                    >
                         <p className={`absolute top-0 capitalize font-bold text-my-secondary text-center`}>estampa</p>
-                        <img src={myEstampa} alt="" className='mt-5 min-w-full' />
+                        <div className='relative mt-5 rounded-[8px] overflow-hidden'>
+                            <div className={`absolute top-0 left-0 w-full h-full bg-[#efefef] transition-all duration-[650ms] ${isHover == true ? 'opacity-[0]' : 'opacity-[0.7]'} flex items-center justify-center text-[38px] text-my-white`}>
+                                <FaRegImage
+                                    className={`transition-all duration-[.3s] ${isHover == true ? 'scale-[1.4] rotate-[360deg]' : 'scale-[1.0] rotate-[0deg]'}`}
+                                />
+                            </div>
+                            <img src={myEstampa} alt="" className='min-w-full' />
+                        </div>
                     </label>
 
                     <input ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
@@ -473,7 +501,7 @@ export default function EditProductCart() {
                         onClick={() => {
                             handleMaterial()
                         }}
-                        className='text-my-primary text-[18px] bg-my-white py-2 w-[130px] rounded-[6px] text-center capitalize'
+                        className='text-my-primary text-[18px] bg-my-white py-2 w-[130px] rounded-[6px] text-center capitalize cursor-pointer'
                     >{myMaterial}</button>
                 </div>
                 
@@ -483,11 +511,11 @@ export default function EditProductCart() {
                         type='number'
                         value={myQuantity}
                         onChange={handleQuantity}
-                        className='text-my-primary text-[18px] text-center bg-my-white py-2 w-[130px]'
+                        className='text-my-primary text-[18px] text-center bg-my-white border-[1px] border-my-white py-2 w-[130px] focus:outline-none focus:text-my-secondary focus:border-my-secondary'
                     />
                 </div>
                 
-                <div className={`w-[90%] flex flex-row bg-my-white p-3 rounded-[6px] mt-5 items-center justify-between font-bold max-w-[700px]`}>
+                <div className={`w-[90%] flex flex-row bg-[#efefef] p-4 rounded-[6px] my-6 items-center justify-between font-bold max-w-[700px]`}>
                     <p className={`text-my-secondary font-bold capitalize text-[22px]`}>valor</p>
                     <p className='text-my-primary text-[20px]'>R$ {String(Number(Number(String(myPrice).replace(',', '.')) * Number(myQuantity)).toFixed(2)).replace('.', ',')}</p>
                 </div>
@@ -496,7 +524,8 @@ export default function EditProductCart() {
                     onClick={() => {
                         navigate('/principal')
                     }}
-                    className={`text-my-white font-bold bg-my-primary uppercase rounded-[8px] mt-5 px-5 py-3 w-[80%] focus:outline-none focus:bg-transparent focus:text-my-primary border-[1px] border-my-primary flex items-center justify-around`}
+                    className={`text-my-white font-bold bg-my-primary uppercase rounded-[8px] mt-2 px-5 py-[14px] w-[90%] border-[1px] border-my-primary flex items-center justify-around cursor-pointer transition-all duration-[.3s] focus:outline-none focus:bg-transparent focus:text-my-primary hover:outline-none hover:bg-transparent hover:text-my-primary
+                    `}
                 >
                     <p className={`flex-grow-[1]`}>continuar comprando</p>
                 </button>
@@ -505,7 +534,13 @@ export default function EditProductCart() {
                         //CHAMA A FUNÇÃO QUE TROCA A IMAGEM E SALVA NO BD
                         handleUpload()
                     }}
-                    className={`text-my-white font-bold bg-my-secondary uppercase rounded-[8px] mt-3 mb-5 py-3 w-[80%] focus:outline-none focus:bg-transparent focus:text-my-secondary border-[1px] border-my-secondary flex items-center justify-around`}
+                    className={`text-my-white font-bold bg-my-secondary uppercase rounded-[8px] mt-2 mb-5 py-3 w-[90%] border-[1px] border-my-secondary flex items-center justify-around cursor-pointer transition-all duration-[.3s]
+                    focus:outline-none
+                    focus:bg-transparent
+                    focus:text-my-secondary
+                    hover:bg-transparent
+                    hover:text-my-secondary
+                    `}
                 >
                     <p className={`flex-grow-[1]`}>atualizar</p>
                     <FaCheck
@@ -518,7 +553,12 @@ export default function EditProductCart() {
                         //CHAMA A FUNÇÃO QUE REMOVE O ITEM DO CARRINHO
                         removeItem()
                     }}
-                    className={`text-my-white bg-my-red uppercase font-bold py-3 my-2 rounded-[8px] mb-6 w-[80%] focus:outline-none focus:bg-transparent focus:text-my-red border-[1px] border-my-red flex items-center justify-around`}
+                    className={`text-my-white bg-my-red uppercase font-bold py-3 my-2 rounded-[8px] mb-6 w-[90%] focus:outline-none border-[1px] border-my-red flex items-center justify-around cursor-pointer transition-all duration-[.3s]
+                    focus:bg-transparent 
+                    focus:text-my-red
+                    hover:bg-transparent 
+                    hover:text-my-red
+                    `}
                 >
                     <p className={`flex-grow-[1]`}>remover</p>
                     <FaTrashAlt

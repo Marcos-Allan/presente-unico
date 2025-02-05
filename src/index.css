@@ -16,6 +16,8 @@ body {
 
 @import "tailwindcss";
 
+@plugin 'tailwind-scrollbar';
+
 @theme {
   /* CORES */
   --color-my-primary: #3B7A58; 

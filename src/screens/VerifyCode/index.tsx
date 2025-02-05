@@ -45,6 +45,7 @@ export default function VerifyCode() {
             //RETORNA A RESPOSTA DA REQUISIÇÃO PRO USUÁRIO
             console.log(response.data)
             
+            //VERIFICA SE O TIPO RETORNADO DA REQUISIÇÃO É UMA STRING
             if(response.data == 'Código de verificação errado'){
                 //CHAMA O MODAL DE ERRO
                 notifyError(response.data)
@@ -64,17 +65,22 @@ export default function VerifyCode() {
 
         })
         .catch(function (error) {
+            //ESCREVE O ERRO NO CONSOLE
             console.log(error)
         })
     }
 
     //FUNÇÃO RESPONSÁVEL POR SALVAR  O VALOR DO INPUT   
     function handleCodeInput(e:ChangeEvent<HTMLInputElement>) {
+        //SETA O ESTADO DO INPUT DE CODE COMO undefined
         setCodeValid(undefined)
+
+        //SETA O CODE COM BASE NO TEXTO DIGITADO NO INPUT
         setCode(e.target.value)
 
-        //CANCELA O TIMER ANTERIOR
+        //VERIFICA SE TEM TIMER ATIVO
         if (timeoutIdCode) {
+            //CANCELA O TIMER ANTERIOR
             clearTimeout(timeoutIdCode);
         }
 
@@ -95,12 +101,15 @@ export default function VerifyCode() {
 
         //VERIFICA SE O code ESTÁ VAZIO
         if(code.length >= 0 && code.length < 7){
+            //SETA O ESTADO DO INPUT DE CODE COMO undefined
             setCodeValid(undefined)
         }else{
             //VERIFICA SE O VALOR DO INPUT ESTÁ ENTRO DO PADRÃO DO REGEX
             if(padraoCode.test(code) == true) {
+                //SETA O ESTADO DO INPUT DE CODE COMO true
                 setCodeValid(true)
             }else{
+                //SETA O ESTADO DO INPUT DE CODE COMO false
                 setCodeValid(false)
             }
         }
@@ -110,8 +119,10 @@ export default function VerifyCode() {
     useEffect(() => {
         //VERIFICA SE OS ESTADOS DDOS INPUTS ESTÃO CORRETOS
         if(codeValid == true){
+            //SETA O ESTADO DO BOTÃO COMO true
             setBtnValid(true)
         }else{
+            //SETA O ESTADO DO BOTÃO COMO false
             setBtnValid(false)
         }
     },[codeValid])
@@ -123,15 +134,18 @@ export default function VerifyCode() {
                 <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Confirme o código</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>Informe o código</p>
                 
-                <Input
-                    label={'Código'}
-                    placeholder={'Digite o código'}
-                    validate={codeValid}
-                    value={code}
-                    onChange={handleCodeInput}
-                />
+                <form className="w-full">
+                    <Input
+                        label={'Código'}
+                        placeholder={'Digite o código'}
+                        validate={codeValid}
+                        value={code}
+                        onChange={handleCodeInput}
+                        ind='off'
+                    />
 
-                <Button text={'Enviar'} validate={btnValid} event={() => forgoutPassword()} />
+                    <Button text={'Enviar'} validate={btnValid} event={() => forgoutPassword()} />
+                </form>
 
                 <p className={`text-center max-w-[700px] mb-5 mt-20 font-bold text-my-secondary text-[18px]`}>
                     Já tem uma conta?

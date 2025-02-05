@@ -52,6 +52,7 @@ export default function GoogleLogin() {
             }
         })
         .catch(function (error) {
+            //ESCREVE O ERRO OCORRIDO NO CONSOLE
             console.log(error)
         })
     }
@@ -77,6 +78,7 @@ export default function GoogleLogin() {
                 console.log(result.user)
             }
         } catch (error) {
+            //ESCREVE O ERRO NO CONSOLE
             console.error("Erro ao fazer login:", error);
         }
     };

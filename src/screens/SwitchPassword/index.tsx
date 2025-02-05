@@ -52,6 +52,7 @@ export default function SiwtchPassword() {
             //MUDA O ESTADO DA APLICAÇÃO PARA false
             toggleLoading(false)
 
+            //VERIFICA SE O TIPO RETORNADO DA REQUISIÇÃO É UM OBJETO
             if(typeof response.data === 'object'){
                 //CHAMA O MODAL DE SUCESSO
                 notifySucess(`Senha alterada com sucesso!`)
@@ -67,17 +68,22 @@ export default function SiwtchPassword() {
             }
         })
         .catch(function (error) {
+            //ESCREVE O ERRO NO CONSOLE
             console.log(error)
         })
     }
 
     //FUNÇÃO RESPONSÁVEL POR SALVAR  O VALOR DO INPUT
     function handlePasswordInput(e:ChangeEvent<HTMLInputElement>) {
+        //SETA O ESTADO DO INPUT DE SENHA COMO undefined
         setPasswordValid(undefined)
+
+        //SETA A SENHA COM BASE NO TEXTO DIGITADO NO INPUT
         setPassword(e.target.value)
 
-        //CANCELA O TIMER ANTERIOR
+        //VERIFICA SE TEM TIMER ATIVO
         if (timeoutIdPassword) {
+            //CANCELA O TIMER ANTERIOR
             clearTimeout(timeoutIdPassword);
         }
 
@@ -93,11 +99,15 @@ export default function SiwtchPassword() {
     
     //FUNÇÃO RESPONSÁVEL POR SALVAR  O VALOR DO INPUT
     function handleConfirmPasswordInput(e:ChangeEvent<HTMLInputElement>) {
+        //SETA O ESTADO DO INPUT DE CONFIRMAR SENHA COMO undefined
         setConfirmPasswordValid(undefined)
+        
+        //SETA A CONFIRMAÇÃO DA SENHA COM BASE NO TEXTO DIGITADO NO INPUT
         setConfirmPassword(e.target.value)
 
-        //CANCELA O TIMER ANTERIOR
+        //VERIFICA SE TEM TIMER ATIVO
         if (timeoutIdConfirmPassword) {
+            //CANCELA O TIMER ANTERIOR
             clearTimeout(timeoutIdConfirmPassword);
         }
 
@@ -118,12 +128,15 @@ export default function SiwtchPassword() {
 
         //VERIFICA SE O EMAIL ESTÁ VAZIO
         if(password.length >= 0 && password.length < 6){
+            //SETA O ESTADO DO INPUT DE SENHA COMO undefined
             setPasswordValid(undefined)
         }else{
             //VERIFICA SE O VALOR DO INPUT ESTÁ ENTRO DO PADRÃO DO REGEX
             if(padraoPassword.test(password) == true) {
+                //SETA O ESTADO DO INPUT DE SENHA COMO true
                 setPasswordValid(true)
             }else{
+                //SETA O ESTADO DO INPUT DE SENHA COMO false
                 setPasswordValid(false)
             }
         }
@@ -135,12 +148,15 @@ export default function SiwtchPassword() {
 
         //VERIFICA SE O EMAIL ESTÁ VAZIO
         if(confirmPassword.length >= 0 && confirmPassword.length < 6){
+            //SETA O ESTADO DO INPUT DE CONFIRMAR A SENHA COMO undefined
             setConfirmPasswordValid(undefined)
         }else{
             //VERIFICA SE O VALOR DO INPUT ESTÁ ENTRO DO PADRÃO DO REGEX
             if(padraoConfirmPassword.test(confirmPassword) == true) {
+                //SETA O ESTADO DO INPUT DE CONFIRMAR A SENHA COMO true
                 setConfirmPasswordValid(true)
             }else{
+                //SETA O ESTADO DO INPUT DE CONFIRMAR A SENHA COMO false
                 setConfirmPasswordValid(false)
             }
         }
@@ -150,8 +166,10 @@ export default function SiwtchPassword() {
     useEffect(() => {
         //VERIFICA SE OS ESTADOS DDOS INPUTS ESTÃO CORRETOS
         if(passwordValid == true && confirmPasswordValid == true){
+            //SETA O ESTADO DO BOTÃO COMO true
             setBtnValid(true)
         }else{
+            //SETA O ESTADO DO BOTÃO COMO false
             setBtnValid(false)
         }
     },[passwordValid, confirmPasswordValid])
@@ -163,25 +181,30 @@ export default function SiwtchPassword() {
                 <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Troque sua senha</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>Crie sua nova senha</p>
                 
-                <Input
-                    label={'Senha'}
-                    placeholder={'Coloque sua senha'}
-                    type={'password'}
-                    validate={passwordValid}
-                    value={password}
-                    onChange={handlePasswordInput}
-                />
-                
-                <Input
-                    label={'Confirmar senha'}
-                    placeholder={'Confirme a senha'}
-                    type={'password'}
-                    validate={confirmPasswordValid}
-                    value={confirmPassword}
-                    onChange={handleConfirmPasswordInput}
-                />
+                <form className={`w-full`}>
+                    <Input
+                        label={'Senha'}
+                        placeholder={'Coloque sua senha'}
+                        type={'password'}
+                        validate={passwordValid}
+                        value={password}
+                        onChange={handlePasswordInput}
+                        ind='new-password'
+                    />
+                    
+                    <Input
+                        label={'Confirmar senha'}
+                        placeholder={'Confirme a senha'}
+                        type={'password'}
+                        validate={confirmPasswordValid}
+                        value={confirmPassword}
+                        onChange={handleConfirmPasswordInput}
+                        ind='current-password'
+                    />
 
-                <Button text={'Trocar'} validate={btnValid} event={() => updateUser()} />
+                    <Button text={'Trocar'} validate={btnValid} event={() => updateUser()} />
+                </form>
+
                 <LoadingPage />
             </div>
             <Footer />

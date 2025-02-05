@@ -16,6 +16,7 @@ export default function CarouselComponent({ images }: Props) {
     //FUNÇÃO RESPONSÁVEL POR FAZER O SROLL DA IMAGEM
     const handleDragStart = (e:any) => e.preventDefault();
     
+    //ARRAY DE IMAGENS
     const items = [
         <div
             style={{ backgroundImage:`url("${images[0]}")` }}
@@ -29,9 +30,6 @@ export default function CarouselComponent({ images }: Props) {
             onDragStart={handleDragStart}
             role="presentation"
         />,
-        // <img src={images[0]} onDragStart={handleDragStart} role="presentation" />,
-        // <img src={images[1]} onDragStart={handleDragStart} role="presentation" />,
-        // <img src={images[0]} onDragStart={handleDragStart} role="presentation" />,
     ];
 
     return (

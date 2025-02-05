@@ -14,26 +14,38 @@ export default function ModalFinishBuy() {
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { finishBuy, toggleFinishBuy, cart, user, toggleUser, setCart }:any = useContext(GlobalContext);
+    
+    //TIPAGEM DAS VARIÁVEIS
     let numeroTelefone:string | undefined = undefined
     let mensagemCodificada:any | undefined = undefined
     let linkWhatsApp:any | undefined = undefined
     
+    //FUNÇÃO RESPONSÁVEL POR ENVIAR MENSAGEM PARA O USUÁRIO
     function sendMessage() {
 
+        //SETA UM ARRAY DE MENSAGENS COMO VAZIO
         const messages:any = []
         
+        //PERCORRE TODOS OS ITENS DO CARRINHO
         cart.map((item:any) => {
-            console.log(item)
 
+            //CRIA A MENSAGEM
             const message = `${item.quantity} ${Number(item.quantity) <= 1 ? `${item.name}` : `${item.name}s`} ${item.material} de estampa "${item.estampa}" na cor ${item.color} ${item.name == 'Camiseta' ? `no tamanho ${item.size} ` : ''}no valor de R$${String(Number(Number(item.price) * Number(item.quantity)).toFixed(2)).replace('.', ',')}`
 
+            //JOGA A MENSGAGEM CRIADA NO ARRAY DE MENSAGENS
             messages.push(message)
         })
 
+        //SETA O NÚMERO DE TELEFONE DO WHATSAPP
         numeroTelefone = "5511939460815";
+        
+        //CRIA O CORPO DA MENSAGEM PELA QUANTIDADE DE ITENS DE CADA PRODUTO NO CARRINHO
         mensagemCodificada = encodeURIComponent(`Olá tudo bom eu gostaria de pedir ${messages.length >= 1 ? `${messages},` : `${messages}.`}`);
+        
+        //LINK DO WHATSAPP COM O NÚMERO INFORMADO E MENSAGEM DE CADA PRODUTO
         linkWhatsApp = `https://wa.me/${numeroTelefone}?text=${mensagemCodificada}`;
 
+        //ABRE O WHATSAPP EM UMA NOVA ABA
         window.open(linkWhatsApp, '_blank')
     }
 

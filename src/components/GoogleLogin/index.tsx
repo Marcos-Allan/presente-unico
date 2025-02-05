@@ -42,7 +42,7 @@ export default function GoogleLogin() {
                 notifySucess(`${response.data.message} ${response.data.person.name}`)
 
                 //COLOCA OS DADOS DO BACKEND DO USUÁRIO NO FRONTEND
-                toggleUser(response.data.person._id, response.data.person.name, response.data.person.email, response.data.person.historico_pedido, response.data.person.cart, true)
+                toggleUser(response.data.person._id, response.data.person.name, response.data.person.email, response.data.person.historico_pedido, response.data.person.cart, response.data.person.client_type, true)
 
                 //NAVEGA PARA A PRÓXIMA PÁGINA
                 navigate('/principal')

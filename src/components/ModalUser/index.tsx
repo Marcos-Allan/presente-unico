@@ -44,13 +44,24 @@ export default function ModalUser() {
                         }}
                         className={`font-bold capitalize text-my-secondary underline`}>perfil</p>
                         {user.logged == true && (
-                            <p
-                                className={`font-bold capitalize text-my-secondary underline`}
-                                onClick={() => {
-                                    setOpenPerfil(false)
-                                    setLogoutModal(true)
-                                }}
-                            >Logout</p>
+                            <>
+                                {user.client_type !== 'client' && (
+                                    <p
+                                        className={`font-bold capitalize text-my-secondary underline`}
+                                        onClick={() => {
+                                            navigate('/admin')
+                                            setOpenPerfil(false)
+                                        }}
+                                    >administrar</p>
+                                )}
+                                <p
+                                    className={`font-bold capitalize text-my-secondary underline`}
+                                    onClick={() => {
+                                        setOpenPerfil(false)
+                                        setLogoutModal(true)
+                                    }}
+                                >Logout</p>
+                            </>
                         )}
                     </div>
                 </div>

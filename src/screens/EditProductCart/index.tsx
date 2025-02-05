@@ -121,7 +121,7 @@ export default function EditProductCart() {
             notifySucess('item deletado com sucesso')
 
             //SETA AS VARIÁVEIS DENTRO NO FRONTEND DA APLICAÇÃO
-            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, user.client_type, true)
 
             //NAVEGA PARA A PÁGINA PRINCIPAL
             navigate('/perfil')
@@ -301,7 +301,7 @@ export default function EditProductCart() {
                 })
                 .then(function (response) {
                     //ATUALIZA OS DADOS DOD USUÁRIO
-                    toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+                    toggleUser(user.id, user.name, user.email, user.history, response.data.cart, user.client_type, true)
 
                     //ATUALIZA O CARRINHO
                     setCart(response.data.cart)
@@ -396,7 +396,7 @@ export default function EditProductCart() {
                         })
                         .then(function (response) {
                             //ATUALIZA OS DADOS DO USUÁRIO
-                            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+                            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, user.client_type, true)
                             
                             //ATUALIZA O CARRINHO
                             setCart(response.data.cart)

@@ -57,7 +57,7 @@ export default function ModalFinishBuy() {
         .then(function (response) {
             console.log(response.data.historico_pedido)
             //COLOCA O HISTÓRICO DO PEDIDO NO FRONT-END DA APLICAÇÃO
-            toggleUser(user.id, user.name, user.email, response.data.historico_pedido, true)
+            toggleUser(user.id, user.name, user.email, response.data.historico_pedido, user.client_type, true)
             
             //LIMPA O ARRAY DE CARRINHO
             setCart([])

@@ -255,7 +255,7 @@ export default function CustomProduct() {
                     //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
                     console.log(response.data)
 
-                    toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+                    toggleUser(user.id, user.name, user.email, user.history, response.data.cart, user.client_type, true)
                     setCart(response.data.cart)
                     // id:any, name:string, email:string, history:any, cart:any, logged:boolean)
                 })
@@ -315,7 +315,7 @@ export default function CustomProduct() {
                             //ESCREVE NO CONSOLE O HISTORICO DE PEDIDOS DO CLIENTE
                             console.log(response.data)
 
-                            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, true)
+                            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, user.client_type, true)
                             setCart(response.data.cart)
                             // id:any, name:string, email:string, history:any, cart:any, logged:boolean)
                         })

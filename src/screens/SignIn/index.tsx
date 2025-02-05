@@ -54,7 +54,7 @@ export default function SignIn() {
             console.log('rd'+response.data)
 
             //COLOCA OS DADOS DO BACKEND DO USUÁRIO NO FRONTEND
-            toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido, response.data.cart, true)
+            toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido, response.data.cart, response.data.client_type, true)
 
             //MUDA O ESTADO DA APLICAÇÃO PARA false
             toggleLoading(false)

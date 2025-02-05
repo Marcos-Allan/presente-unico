@@ -20,7 +20,7 @@ export default function Header() {
     const location = useLocation();
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { openCart, setOpenCart, openPerfil, setOpenPerfil }:any = useContext(GlobalContext);
+    const { openCart, setOpenCart, openPerfil, setOpenPerfil, user }:any = useContext(GlobalContext);
 
     return(
         <div
@@ -45,6 +45,11 @@ export default function Header() {
                     className={`w-[110px]`}
                 />
             </div>
+            
+            {user.logged == true && user.client_type !== 'client' && (
+                <p className={`text-[16px] uppercase text-my-secondary px-3 font-bold`}>adm</p>
+            )}
+
             {(location.pathname !== '/sign-in') && (location.pathname !== '/sign-up') && (location.pathname !== '/forgout-password') && (location.pathname !== '/verify-code') && (location.pathname !== '/switch-password') &&  (
                 <div className={`flex items-center gap-2 text-[28px] text-my-secondary`}>
                     <FaUser

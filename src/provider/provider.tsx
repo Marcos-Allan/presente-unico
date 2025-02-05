@@ -18,6 +18,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
                 { data: '9/10/2024', name: 'Caneca Porcelana', img: 'undefined', price: 19.90, quantity: 2, estampa: '', },
                 { data: '24/08/2024', name: 'Caneca Mágica', img: 'undefined', price: 24.75, quantity: 4, estampa: '', }
             ],
+            client_type: userLS !== null ? JSON.parse(userLS).client_type : 'client',
             logged: userLS !== null ? JSON.parse(userLS).logged : false,
         }
     );
@@ -75,12 +76,12 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     //FUNÇÃO RESPONSÁVEL POR ATUALIZAR OS DADOS DO USUÁRIO
-    function toggleUser(id:any, name:string, email:string, history:any, cart:any, logged:boolean) {
+    function toggleUser(id:any, name:string, email:string, history:any, cart:any, client_type:string, logged:boolean) {
         //SALVA OS DADOS DO USUÁRIO NO localStorage
-        localStorage.setItem('userculturalPassport', JSON.stringify({ id: id, name: name, email: email, history: history, cart: cart, logged: logged }))
+        localStorage.setItem('userculturalPassport', JSON.stringify({ id: id, name: name, email: email, history: history, cart: cart, client_type: client_type, logged: logged }))
         
         //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
-        setUser({ id: id, name: name, email: email, history: history, logged: logged })
+        setUser({ id: id, name: name, email: email, history: history, client_type: client_type, logged: logged })
 
         //PEGA O CARRINHO DO USUÁRIO
         setCart(cart)
@@ -92,7 +93,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.removeItem('userculturalPassport')
         
         //SALVA OS DADOS NO FRONTEND DA APLICAÇÃO
-        setUser({ id: 0, name: "MA", email: "allanmenezes880@gmail.com", logged: false, history: [
+        setUser({ id: 0, name: "MA", email: "allanmenezes880@gmail.com", client_type: "client", logged: false, history: [
             { data: '9/10/2024', name: 'Caneca Porcelana', img: 'undefined', price: 19.90, quantity: 2, estampa: '', },
             { data: '24/08/2024', name: 'Caneca Mágica', img: 'undefined', price: 24.75, quantity: 4, estampa: '', },
         ] })

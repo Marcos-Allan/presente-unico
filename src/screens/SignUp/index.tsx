@@ -65,7 +65,7 @@ export default function SignUp() {
                 notifySucess(`Seja muito bem vindo ${response.data.name}`)
 
                 //COLOCA OS DADOS DO BACKEND DO USUÁRIO NO FRONTEND
-                toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido, true)
+                toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido, response.data.client_type, true)
                 
                 //NAVEGA PARA A PRÓXIMA PÁGINA
                 navigate('/principal')

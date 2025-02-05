@@ -56,7 +56,7 @@ export default function ForgoutPassword() {
                 notifySucess(`Email enviado para ${email}`)
 
                 //SETA OS DADOS DO USUÁRIO NO FRONTEND DA APLICAÇÃO
-                toggleUser(response.data.user._id, user.name, user.email, user.history, user.cart, user.logged )
+                toggleUser(response.data.user._id, user.name, user.email, user.history, user.cart, user.client_type, user.logged )
                 
                 // MUDA O ESTADO DA APLICAÇÃO PARA false
                 toggleLoading(false)

@@ -40,7 +40,6 @@ export default function Administer() {
     },[user])
 
     //UTILIZA O HOOK useState
-    const [print, setPrint] = useState<string | undefined>(undefined)
     const [imgURLs, setImgURLs] = useState<string[]>([])
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [btnActive, setBtnActive] = useState<boolean>(false)
@@ -137,14 +136,13 @@ export default function Administer() {
     const notifySucess = (message:string) => toast.success(message);
 
     return(
-        <div className={`bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-[#efefef]`}
+        <div className={`bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
         >
             <Header />
-            <div className={`bg-my-white w-[95%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
+            <div className={`bg-my-white w-[80%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
                 <label
-                    onClick={() => setPrint('my')}
                     htmlFor="estampa"
-                    className={`bg-[#efefef] w-[80%] flex items-center mb-3 flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
+                    className={`bg-[#efefef] w-full flex items-center mb-3 flex-col transition-all duration-[.3s] border-transparent justify-between mr-2 p-1 rounded-[8px] border-[1px] cursor-pointer hover:bg-transparent hover:border-my-secondary py-4`}
                 >
                     <p className={`text-[18px] font-bold text-my-secondary text-center`}>Adicione mais estampas</p>
                     <AiFillPicture className={`mt-2 text-my-secondary text-[48px]`}/>
@@ -152,12 +150,12 @@ export default function Administer() {
 
                 <input multiple={true} ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
 
-                <div className={`w-[80%] flex items-center justify-center flex-wrap gap-1`}>
+                <div className={`w-full flex items-center justify-center flex-wrap gap-1`}>
                     {imgURLs.map((url:string, index:number) => (
                         <div
                             onMouseEnter={() => toggleHover(index, true)}
                             onMouseLeave={() => toggleHover(index, false)}
-                            className={`w-[200px] h-[150px] rounded-[6px] overflow-hidden relative cursor-pointer`}
+                            className={`w-full max-w-[300px] h-auto rounded-[6px] overflow-hidden relative cursor-pointer`}
                         >
                             <div className={`absolute top-0 left-0 w-full h-full bg-[#efefef] transition-all duration-[650ms] ${isHover[index] == true ? 'opacity-[0]' : 'opacity-[0.7]'} flex items-center justify-center text-[38px] text-my-white`}>
                                 <FaTrashCan
@@ -184,7 +182,7 @@ export default function Administer() {
                         handleUpload()
                     }}
                     className={`
-                        mt-3 text-white py-4 rounded-[8px] w-[90%] mb-10 text-[20px] font-bold max-w-[900px] border-[1px] focus:outline-none focus:bg-transparent hover:bg-transparent transition-all duration-[.3s] cursor-pointer
+                        mt-3 text-white py-4 rounded-[8px] w-full mb-10 text-[20px] font-bold max-w-[900px] border-[1px] focus:outline-none focus:bg-transparent hover:bg-transparent transition-all duration-[.3s] cursor-pointer
                         ${btnActive == true
                             ? 'bg-my-primary focus:text-my-primary hover:text-my-primary border-my-primary'
                             : 'bg-[#efefef] focus:text-[#efefef] hover:text-[#efefef] border-[#efefef]'

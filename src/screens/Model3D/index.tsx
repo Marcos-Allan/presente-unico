@@ -35,7 +35,7 @@ export default function Model3D() {
                 onMouseEnter={() => toggleHover(true)}
                 onMouseLeave={() => toggleHover(false)}
                 className={`
-                    w-[50px] h-[50px] absolute top-0 left-0 bg-my-black z-[2] text-my-white flex items-center justify-center font-bold text-[28px] m-2 p-2 rounded-[6px] opacity-[0.4] hover:opacity-[0.8] cursor-pointer transition-all duration-[.2s]
+                    w-[50px] h-[50px] fixed top-0 left-0 bg-my-black z-[2] text-my-white flex items-center justify-center font-bold text-[28px] m-2 p-2 rounded-[6px] opacity-[0.4] hover:opacity-[0.8] cursor-pointer transition-all duration-[.2s]
                 `}
             >
                 <IoReturnDownBackOutline

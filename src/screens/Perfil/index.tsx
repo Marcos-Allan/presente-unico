@@ -30,7 +30,7 @@ export default function Perfil() {
     },[user])
 
     return(
-        <div className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}>
+        <div className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}>
             <Header />
             <div className='w-full px-2 py-5 max-w-[900px]'>
                 <p>Nome: <span className={`font-bold`}>{user.name}</span></p>

@@ -67,14 +67,14 @@ export default function Input(props: Props) {
                     >
                         {visible == true ? (
                             <FaEye
-                                className={`
+                                className={`cursor-pointer transition-all duration-[.3s] hover:scale-[1.4]
                                     ${props.validate == true && 'text-my-primary'}
                                     ${props.validate == false && 'text-my-red'}
                                 `}
                             />
                         ):(
                             <FaEyeSlash 
-                                className={`
+                                className={`cursor-pointer transition-all duration-[.3s] hover:scale-[1.4]
                                     ${props.validate == true && 'text-my-primary'}
                                     ${props.validate == false && 'text-my-red'}
                                 `}

@@ -38,7 +38,19 @@ export default function CustomProduct() {
     const [typeInd, setTypeInd] = useState<number>(0)
     const [arrayEstampas, setArrayEstampas] = useState<string[]>([])
     const [indPreEstampa, setIndPreEstampa] = useState<number>(0)
+    const [isHoverMyPrint, setIsHoverMyPrint] = useState<boolean>(false)
+    const [isHoverPrint, setIsHoverPrint] = useState<boolean>(false)
 
+    //FUNÇÃO RESPONSÁVEL POR TROCAR O ESTADO DE isHoverMyPrint
+    function toggleHoverMyPrint(state:boolean) {
+        setIsHoverMyPrint(state)
+    }
+    
+    //FUNÇÃO RESPONSÁVEL POR TROCAR O ESTADO DE isHoverPrint
+    function toggleHoverPrint(state:boolean) {
+        setIsHoverPrint(state)
+    }
+    
     //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
     useEffect(() => {
         if(productSelected.name == "Caneca"){
@@ -341,7 +353,7 @@ export default function CustomProduct() {
     const notifySucess = (message:string) => toast.success(message);
 
     return(
-        <div className={`bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-[#efefef]`}
+        <div className={`bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
         >
             <Header />
             <div className={`bg-[#efefef] w-[95%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
@@ -353,25 +365,36 @@ export default function CustomProduct() {
                     <h1 className={`w-full text-left text-[18px] font-bold capitalize text-my-secondary mb-4`}>estampa</h1>
 
                     <label
+                        onMouseEnter={() => toggleHoverMyPrint(true)}
+                        onMouseLeave={() => toggleHoverMyPrint(false)}
                         onClick={() => setPrint('my')}
                         htmlFor="estampa"
-                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
+                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] cursor-pointer ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
                     >
                         <p className={`text-[18px] font-bold text-my-secondary text-center`}>Escolha sua estampa</p>
-                        <AiFillPicture className={`mt-2 text-my-secondary text-[48px]`}/>
+                        <AiFillPicture className={`
+                            mt-2 text-my-secondary text-[48px] transition-all duration-[.5s]
+                                ${isHoverMyPrint == true ? `rotate-[360deg]` : `rotae[0deg]`}
+                            `}/>
                     </label>
 
                     <input ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
 
                     <button
+                        onMouseEnter={() => toggleHoverPrint(true)}
+                        onMouseLeave={() => toggleHoverPrint(false)}
                         onClick={() => {
                             setImgURL(arrayEstampas[indPreEstampa])
                             setPrint('other')
                         }}
-                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
+                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] cursor-pointer ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
                     >
                         <p className={`text-[18px] font-bold text-my-secondary text-center`}>Estampa pré pronta</p>
-                        <AiFillFileImage className={`mt-2 text-my-secondary text-[48px]`}/>
+                        <AiFillFileImage className={`
+                                mt-2 text-my-secondary text-[48px] transition-all duration-[.5s]
+                                ${isHoverPrint == true ? `rotate-[360deg]` : `rotae[0deg]`}
+                            `}
+                        />
                     </button>
 
                     {imgURL !== undefined && (
@@ -427,7 +450,7 @@ export default function CustomProduct() {
                             key={i}
                             onClick={() => setColor(materialColor)}
                             style={{ backgroundColor: materialColor }}
-                            className={`w-[60px] h-[60px] rounded-[6px] ${color == materialColor && 'scale-[1.2]'} border-[1px] border-my-black`}
+                            className={`w-[60px] h-[60px] rounded-[6px] ${color == materialColor && 'scale-[1.2]'} border-[1px] border-my-black cursor-pointer transition-all duration-[.3s] hover:scale-[0.9]`}
                         >
                         </div>
 
@@ -447,7 +470,11 @@ export default function CustomProduct() {
                     
                     handleUpload()
                 }}
-                className={`${btnActive == true ? 'bg-my-primary' : 'bg-[#efefef]'} text-white py-4 rounded-[8px] w-[90%] mb-10 text-[20px] font-bold max-w-[900px]`}
+                className={`
+                    ${btnActive == true ? 'bg-my-primary' : 'bg-[#efefef]'}
+                    text-white py-4 rounded-[8px] w-[90%] mb-10 text-[20px] font-bold max-w-[900px]
+                    hover:text-my-primary hover:bg-transparent transition-all duration-[.3s] border-[1px] border-my-primary cursor-pointer
+                `}
             >
                 Adicionar ao carrinho
             </button>

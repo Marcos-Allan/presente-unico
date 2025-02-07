@@ -443,7 +443,7 @@ export default function EditProductCart() {
 
     return(
         <div className={`overflow-x-hidden`}>
-            <div className={`bg-my-white w-screen min-h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-[#efefef]`}>
+            <div className={`bg-my-white w-screen min-h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}>
                 <Header />
                 <div className={`relative p-3 w-[80%] bg-[#efefef] flex items-center justify-center mt-4 rounded-[12px] max-w-[400px]`}>
                     <Link
@@ -524,7 +524,7 @@ export default function EditProductCart() {
                     onClick={() => {
                         navigate('/principal')
                     }}
-                    className={`text-my-white font-bold bg-my-primary uppercase rounded-[8px] mt-2 px-5 py-[14px] w-[90%] border-[1px] border-my-primary flex items-center justify-around cursor-pointer transition-all duration-[.3s] focus:outline-none focus:bg-transparent focus:text-my-primary hover:outline-none hover:bg-transparent hover:text-my-primary
+                    className={`max-w-[700px] text-my-white font-bold bg-my-primary uppercase rounded-[8px] mt-2 px-5 py-[14px] w-[90%] border-[1px] border-my-primary flex items-center justify-around cursor-pointer transition-all duration-[.3s] focus:outline-none focus:bg-transparent focus:text-my-primary hover:outline-none hover:bg-transparent hover:text-my-primary
                     `}
                 >
                     <p className={`flex-grow-[1]`}>continuar comprando</p>
@@ -534,7 +534,7 @@ export default function EditProductCart() {
                         //CHAMA A FUNÇÃO QUE TROCA A IMAGEM E SALVA NO BD
                         handleUpload()
                     }}
-                    className={`text-my-white font-bold bg-my-secondary uppercase rounded-[8px] mt-2 mb-5 py-3 w-[90%] border-[1px] border-my-secondary flex items-center justify-around cursor-pointer transition-all duration-[.3s]
+                    className={`max-w-[700px] text-my-white font-bold bg-my-secondary uppercase rounded-[8px] mt-2 mb-5 py-3 w-[90%] border-[1px] border-my-secondary flex items-center justify-around cursor-pointer transition-all duration-[.3s]
                     focus:outline-none
                     focus:bg-transparent
                     focus:text-my-secondary
@@ -553,7 +553,7 @@ export default function EditProductCart() {
                         //CHAMA A FUNÇÃO QUE REMOVE O ITEM DO CARRINHO
                         removeItem()
                     }}
-                    className={`text-my-white bg-my-red uppercase font-bold py-3 my-2 rounded-[8px] mb-6 w-[90%] focus:outline-none border-[1px] border-my-red flex items-center justify-around cursor-pointer transition-all duration-[.3s]
+                    className={`max-w-[700px] text-my-white bg-my-red uppercase font-bold py-3 my-2 rounded-[8px] mb-6 w-[90%] focus:outline-none border-[1px] border-my-red flex items-center justify-around cursor-pointer transition-all duration-[.3s]
                     focus:bg-transparent 
                     focus:text-my-red
                     hover:bg-transparent 

@@ -11,7 +11,9 @@ export default function ChoiceQuantityCard(props: Props) {
     return(
         <button
             onClick={() => props.onClick()}
-            className={`w-[30.8%] mb-2 bg-[#efefef] flex items-center flex-col justify-between mr-2 rounded-[8px] p-2 border-[2px] ${props.active == true ? 'border-my-primary' : 'border-transparent'}`}
+            className={`w-[30.8%] mb-2 bg-[#efefef] flex items-center flex-col justify-between mr-2 rounded-[8px] p-2 border-[2px] hover:border-my-secondary transition-all duration-[.3s] cursor-pointer
+                ${props.active == true ? 'border-my-primary' : 'border-transparent'}
+            `}
         >
             <p className={`text-my-secondary text-center w-full font-bold text-[14px]`}>{Number(props.quantity)} unidade{Number(props.quantity) >= 2 && 's'}</p>
             <div className={`bg-my-secondary w-full h-[2px] my-2`}></div>

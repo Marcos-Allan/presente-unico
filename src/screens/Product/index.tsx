@@ -177,7 +177,7 @@ export default function Product() {
 
     return(
         <div
-            className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto scrollbar sm:px-0 scrollbar-thumb-my-secondary scrollbar-track-my-gray`}
+            className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
         >
             <Header />
             <div className={`bg-[#efefef] rounded-[16px] mt-5 flex items-center justify-center p-2 w-[80%] min-h-[400px] max-w-[900px]`}>
@@ -206,7 +206,7 @@ export default function Product() {
                             onClick={() => {
                                 setProductID(i);
                             }}
-                            className="w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center  rounded-[4px]"
+                            className={`w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center  rounded-[4px] cursor-pointer transition-all duration-[.3s] border-[2px] border-[#efefef] hover:border-my-secondary ${productID == i && 'border-my-secondary'}`}
                         >
                             <div className={`flex-grow-[1] flex items-center justify-center`}>
                                 <img
@@ -282,7 +282,15 @@ export default function Product() {
                         onClick={() => {
                             setModalQuantity(true)
                         }}
-                        className={`w-[30.8%] mb-2 bg-[#efefef] flex items-center flex-col justify-between mr-2 rounded-[8px] p-2`}
+                        className={`w-[30.8%] mb-2 bg-[#efefef] flex items-center flex-col justify-between mr-2 rounded-[8px] p-2 border-[1px] border-[#efefef] hover:border-my-secondary cursor-pointer transition-all duration-[.3s]
+                            ${
+                                quantity != 1 &&
+                                quantity != 10 &&
+                                quantity != 15 &&
+                                quantity != 20 &&
+                                quantity != 50 && 'border-my-primary'
+                            }
+                        `}
                     >
                         <div className={`rounded-[50%] border-[2px] border-my-secondary p-2`}>
                             <FaPlus className={`text-my-secondary`} />
@@ -310,7 +318,7 @@ export default function Product() {
                         material: products[typeInd].type[productID],
                     })
                 }}
-                className={`mt-6 mb-2 text-my-white bg-my-primary w-[70%] rounded-[16px] py-4 text-[20px] font-inter font-bold max-w-[900px]`}
+                className={`mt-6 mb-2 text-my-white bg-my-primary w-[70%] rounded-[16px] py-4 text-[20px] font-inter font-bold max-w-[900px] transition-all duration-[.3s] border-[1px] border-my-primary hover:text-my-primary hover:bg-transparent cursor-pointer`}
             >
                 Personalize seu produto!
             </button>
@@ -342,27 +350,38 @@ export default function Product() {
                 <div className={`fixed top-0 left-0 w-screen h-screen bg-[#000000ac] flex items-center justify-center`}>
                     <div className={`flex flex-col max-w-[80%] w-[900px] bg-my-white rounded-[8px] p-5 justify-center items-center relative`}>
                         <h1 className={`w-full text-my-secondary text-center mb-3 text-[24px] font-bold`}>Escolha a quantidade</h1>
-                        <input
-                            type="number"
-                            value={quantity}
-                            onChange={(e) => {
-                                if(Number(e.target.value) <= 0){
-                                    setQuantity(1)
-                                }else{
-                                    setQuantity(Number(e.target.value))
-                                }
-                            }}
-                            className={`text-[24px] outline-none w-full border-[1px] py-3 pl-2 border-my-secondary rounded-[6px] mb-2`}
-                        />
-                        <input
-                            onClick={(e) => {
-                                e.preventDefault()
-                                setModalQuantity(false)  
-                            }}
-                            type="submit"
-                            value="confirmar"
-                            className={`border-none outline-none uppercase w-full py-4 text-[18px] bg-my-secondary rounded-[6px] text-my-white`}
-                        />
+                        <form
+                            onSubmit={(e) => e.preventDefault()}
+                            className={`w-full`}
+                        >
+                            <input
+                                type="number"
+                                value={quantity}
+                                onChange={(e) => {
+                                    if(Number(e.target.value) <= 0){
+                                        setQuantity(1)
+                                    }else{
+                                        setQuantity(Number(e.target.value))
+                                    }
+                                }}
+                                className={`text-[24px] outline-none w-full border-[1px] py-3 pl-2 border-my-secondary rounded-[6px] mb-2`}
+                            />
+                            <input
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    setModalQuantity(false)  
+                                }}
+                                type="submit"
+                                value="confirmar"
+                                className={`
+                                    outline-none uppercase w-full py-4 text-[18px] bg-my-secondary rounded-[6px] text-my-white border-[1px] border-my-secondary transition-all duration-[.3s] cursor-pointer
+                                    hover:bg-transparent
+                                    hover:text-my-secondary
+                                    focus:bg-transparent
+                                    focus:text-my-secondary
+                                `}
+                            />
+                        </form>
                     </div>
                 </div>
             )}

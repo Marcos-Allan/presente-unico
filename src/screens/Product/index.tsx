@@ -358,17 +358,16 @@ export default function Product() {
                                 type="number"
                                 value={quantity}
                                 onChange={(e) => {
-                                    if(Number(e.target.value) <= 0){
-                                        setQuantity(1)
-                                    }else{
-                                        setQuantity(Number(e.target.value))
-                                    }
+                                    setQuantity(Number(e.target.value))
                                 }}
                                 className={`text-[24px] outline-none w-full border-[1px] py-3 pl-2 border-my-secondary rounded-[6px] mb-2`}
                             />
                             <input
                                 onClick={(e) => {
                                     e.preventDefault()
+                                    if(Number(quantity) <= 0){
+                                        setQuantity(1)
+                                    }
                                     setModalQuantity(false)  
                                 }}
                                 type="submit"

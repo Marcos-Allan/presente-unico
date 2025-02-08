@@ -428,14 +428,8 @@ export default function EditProductCart() {
 
     //FUNÇÃO RESPONSÁVEL POR MUDAR A QUANTIDADE DO PRODUTO
     function handleQuantity(e:any) {
-        //VERIFICA SE A QUANTIDADE DO PRODUTO É MENOR OU IGUAL A 0
-        if(Number(e.target.value) <= 0){
-            //SETA A QUANTIDADE DE PRODUTO COMO 0
-            setMyQuantity(0)
-        }else{
-            //SETA A QUANTIDADE DE PRODUTO COM BASE NO QUE ELE DIGITA NO INPUT
-            setMyQuantity(e.target.value)
-        }
+        //SETA A QUANTIDADE DE PRODUTO COM BASE NO QUE ELE DIGITA NO INPUT
+        setMyQuantity(e.target.value)
     }
 
     //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
@@ -510,6 +504,13 @@ export default function EditProductCart() {
                     <input
                         type='number'
                         value={myQuantity}
+                        onBlur={() => {
+                            if(myQuantity >= 1 ){
+                                return
+                            }else{
+                                setMyQuantity(1)
+                            }
+                        }}
                         onChange={handleQuantity}
                         className='text-my-primary text-[18px] text-center bg-my-white border-[1px] border-my-white py-2 w-[130px] focus:outline-none focus:text-my-secondary focus:border-my-secondary'
                     />

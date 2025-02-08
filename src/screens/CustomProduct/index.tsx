@@ -20,10 +20,6 @@ import { GlobalContext } from "../../provider/context";
 import { AiFillPicture, AiFillFileImage } from "react-icons/ai"
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa6";
 
-//IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
-import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { storage } from '../../utils/firebase';
-
 export default function CustomProduct() {
     //FAZ REFERENCIA A UM ELEMENTO
     const inputFileRef = useRef<HTMLInputElement | null>(null)
@@ -70,28 +66,18 @@ export default function CustomProduct() {
         }
     },[])
 
-    //FUNÇÃO RESPONSÁVEL POR LISTAR OS AVATARES
-    const fetchImages = async () => {
-        //FAZ UMA REFERÊNCIA AO LOCAL DE AVATARES SALVOS NA NUVEM
-        const storageRef = ref(storage, '/images/pre-estampas');
-        // const storageRef = ref(storage, '/images/icons-achievements');
-
-        try {
-            //PEGA AS IMAGENS DENTRO DA PASTA ESPECIFICADA
-            const result = await listAll(storageRef);
-
-            //PEGA A URL DOS AVATARES
-            const urlPromises = result.items.map((imageRef:any) => getDownloadURL(imageRef));
-            
-            //ESPERA TODOS OS AVATARES SEREM 
-            const urls = await Promise.all(urlPromises);
-            
+    //FUNÇÃO RESPONSÁVEL POR LISTAR AS ESTAMPAS PRÉ-PRONTAS
+    const fetchEstampas = async () => {
+        axios.get("https://back-tcc-murilo.onrender.com/get-images")
+        .then(function (response) {
+            console.log(response.data)
             //COLOCA AS ESTAMPAS NO ARRAY DE ESTAMPAS
-            setArrayEstampas(urls)
-        } catch (error) {
-            console.error('Erro ao listar imagens:', error);
-        }
-    };
+            setArrayEstampas(response.data)
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+      };
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -105,7 +91,7 @@ export default function CustomProduct() {
         console.log(productSelected)
 
         //CHAMA A FUNÇÃO QUE PEGA AS IMAGENS DAS ESTAMPAS
-        fetchImages()
+        fetchEstampas()
 
         //VERIFICA SE TEM ITEM ESCOLHIDO
         if(productSelected.name == 'undefined') {
@@ -304,7 +290,6 @@ export default function CustomProduct() {
 
                         //PEGA A URL DA IMAGEM
                         setImg(url);
-
 
                         //FAZ A REQUISIÇÃO QUE ATUALIZA O HISTORICO DE PEDIDOS NO BANCO DE DADOS DO USUÁRIO
                         axios.put('https://back-tcc-murilo.onrender.com/add-carrinho', {

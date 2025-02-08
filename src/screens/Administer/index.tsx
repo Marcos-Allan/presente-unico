@@ -2,6 +2,7 @@
 import { useEffect, useState, useContext, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify';
+import axios from 'axios'
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
@@ -13,10 +14,6 @@ import ModalCart from '../../components/ModalCart';
 import ModalUser from '../../components/ModalUser';
 import ModalLogout from '../../components/ModalLogout';
 import ModalFinishBuy from '../../components/ModalFinishBuy';
-
-//IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../utils/firebase';
 
 //IMPORTAÇÃO DOS ICONES
 import { AiFillPicture } from "react-icons/ai"
@@ -72,27 +69,32 @@ export default function Administer() {
 
         try {
             const uploadPromises = selectedFiles.map((file) => {
-                return new Promise<string>((resolve, reject) => {
-                    const storageRef = ref(storage, `images/pre-estampas/${Date.now()}-${file.name}`);
-                    const uploadTask = uploadBytesResumable(storageRef, file);
+                return new Promise<string>(() => {
+                    //GERA UM ID ALEATÓRIO
+                    const id = Math.floor(Math.random() * 99999)
+                    
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', 'present');
+                    formData.append('cloud_name', 'dgvxpeu0a');
+                    formData.append('folder', 'images/pre-estampas');
+                    formData.append('public_id', String(id));
+                    
 
-                    uploadTask.on(
-                        "state_changed",
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log(`Upload de ${file.name}: ${progress.toFixed(2)}%`);
-                        },
-                        (error) => {
-                            console.error("Erro ao fazer upload:", error);
-                            toast.error("Erro ao fazer upload da imagem.");
-                            reject(error);
-                        },
-                        async () => {
-                            const url = await getDownloadURL(uploadTask.snapshot.ref);
-                            console.log("Imagem salva:", url);
-                            resolve(url);
+                    axios.post('https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload', formData)
+                    .then(response => {
+                        if (response.data.secure_url) {
+
+                            const url = response.data.secure_url;
+
+                            //ESCREVE A URL DA IMAGEM NO CONSOLE
+                            console.log('imagem salva: '+ url)
                         }
-                    );
+                    })
+                    .catch(error => {
+                        console.error('Erro ao fazer upload:', error);
+                    });
+
                 });
             });
 
@@ -153,6 +155,7 @@ export default function Administer() {
                 <div className={`w-full flex items-center justify-center flex-wrap gap-1`}>
                     {imgURLs.map((url:string, index:number) => (
                         <div
+                            key={index}
                             onMouseEnter={() => toggleHover(index, true)}
                             onMouseLeave={() => toggleHover(index, false)}
                             className={`w-full max-w-[300px] h-auto rounded-[6px] overflow-hidden relative cursor-pointer`}

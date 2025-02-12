@@ -11,21 +11,11 @@ import ModalFinishBuy from "../../components/ModalFinishBuy"
 //IMPORTAÇÃO DAS IMAGENS
 import img from '../../../public/carrossell1.jpg'
 import img2 from '../../../public/carrossell1.png'
-import camisa from '../../../public/Poliester.png'
-import caneca from '../../../public/Caneca Plástica.png'
-import caderno from '../../../public/Caderno A4.png'
-import almofada from '../../../public/almofada.png'
-import agenda from '../../../public/Agenda 17x9,4cm.png'
-import azulejo from '../../../public/Azulejo 15x15cm.png'
-import almochaveiro from '../../../public/Almochaveiro 7x7cm.png'
-
-//IMPORTAÇÃO DAS BIBLIOTECAS DO FIREBASE
-import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { storage } from '../../utils/firebase';
 
 //IMPORTAÃO DAS BIBLIOTECAS
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { useNavigate } from 'react-router'
+import axios from 'axios'
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
@@ -37,6 +27,9 @@ export default function Principal() {
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { user, setProductSelected }:any = useContext(GlobalContext);
 
+    //UTILIZAÇÃO DO HOOK useState
+    const [products, setProducts] = useState<any>(undefined)
+
     //FUNÇÃO RESPONSÁVEL POR PEGAR O PRODUTO SELECIONADO
     function selectProduct(image:string, name:string, price:string, materials:any) {
         //SETA O PRODUTO SELECIONADO NA VARIAVEL GLOBAL DE EDIÇÃO DE PRODUTO
@@ -46,29 +39,16 @@ export default function Principal() {
         navigate(`/product/${name.toLowerCase()}`)
     }
 
-    //FUNÇÃO RESPONSÁVEL POR LISTAR OS AVATARES
-    const fetchImages = async () => {
-        //FAZ UMA REFERÊNCIA AO LOCAL DE AVATARES SALVOS NA NUVEM
-        const storageRef = ref(storage, '/images/products');
-        // const storageRef = ref(storage, '/images/icons-achievements');
-
-        try {
-            //PEGA AS IMAGENS DENTRO DA PASTA ESPECIFICADA
-            const result = await listAll(storageRef);
-
-            //PEGA A URL DOS AVATARES
-            const urlPromises = result.items.map((imageRef:any) => getDownloadURL(imageRef));
-            
-            //ESPERA TODOS OS AVATARES SEREM 
-            const urls = await Promise.all(urlPromises);
-            
-            //ESCREVE NO CONSOLE AS URLS DAS IMAGENS
-            console.log(urls)
-        } catch (error) {
-            //ESCREVE O ERRO NO CONSOLE
-            console.error('Erro ao listar imagens:', error);
-        }
-    };
+    //FUNÇÃO RESPONSÁVEL POR LISTAR OS PRODUTOS
+    function getProducts() {
+        axios.get('https://back-tcc-murilo.onrender.com/all-products')
+        .then(function (response) {
+            setProducts(response.data)
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    }
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -83,8 +63,8 @@ export default function Principal() {
     useEffect(() => {
         console.log(user.name)
 
-        //CHAMA A FUNÇÃO QUE LISTA A URL DAS IMAGENS DOS PRODUTOS
-        fetchImages()
+        //CHAMA A FUNÇÃO QUE PEGA OS PRODUTOS DO BD
+        getProducts()
     },[])
 
     return(
@@ -102,49 +82,16 @@ export default function Principal() {
             </div>
 
             <div className="flex items-start justify-center flex-wrap py-4 w-[100%] relative max-w-[900px]">
-
-                <ProductCard
-                    image={caneca}
-                    name={'Caneca'}
-                    price={'29,90'}
-                    onClick={() => selectProduct(caneca, 'Caneca', '29,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
-                />
-                <ProductCard
-                    image={camisa}
-                    name={'Camiseta'}
-                    price={'39,90'}
-                    onClick={() => selectProduct(camisa, 'Camiseta', '39,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
-                />
-                <ProductCard
-                    image={almofada}
-                    name={'Almofada'}
-                    price={'19,90'}
-                    onClick={() => selectProduct(almofada, 'Almofada', '19,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
-                />
-                <ProductCard
-                    image={caderno}
-                    name={'Caderno'}
-                    price={'19,90'}
-                    onClick={() => selectProduct(caderno, 'Caderno', '19,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
-                />
-                <ProductCard
-                    image={agenda}
-                    name={'Agenda'}
-                    price={'14,90'}
-                    onClick={() => selectProduct(agenda, 'Agenda', '14,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
-                />
-                <ProductCard
-                    image={azulejo}
-                    name={'Azulejo'}
-                    price={'09,90'}
-                    onClick={() => selectProduct(azulejo, 'Azulejo', '09,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
-                />
-                <ProductCard
-                    image={almochaveiro}
-                    name={'Almochaveiro'}
-                    price={'12,90'}
-                    onClick={() => selectProduct(almochaveiro, 'Almochaveiro', '12,90', {materiais: ['poliester', 'algodão', 'sarja'], colors: ['red', 'green', 'blue']})}
-                />
+                {products != undefined && products.length >= 1 && products.map((product:any) => (
+                    <ProductCard
+                        image={product.img[0]}
+                        name={product.name}
+                        price={product.prices[0].split('.')[0] <= 9 ? `0${product.prices[0].replace('.', ',')}` : `${product.prices[0].replace('.', ',')}`}
+                        onClick={() => {
+                            selectProduct(product.img[0], product.name, product.prices[0], {materiais: ['poliester', 'algodão', 'sarja'], colors: product.colors[0]})
+                        }}
+                    />
+                ))}
             </div>
 
             <Footer />

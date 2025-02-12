@@ -9,7 +9,6 @@ import { IoReturnDownBackOutline } from "react-icons/io5";
 //IMPORTAÇÃO DOS COMPONENTES
 import { Experience } from "../../components/Experience";
 
-
 export default function Model3D() {
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
     const navigate = useNavigate()

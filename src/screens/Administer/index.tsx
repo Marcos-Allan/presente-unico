@@ -25,6 +25,7 @@ import { IoMdAdd } from "react-icons/io";
 export default function Administer() {
     //FAZ REFERENCIA A UM ELEMENTO
     const inputFileRef = useRef<HTMLInputElement | null>(null)
+    const inputFileRefProduct = useRef<HTMLInputElement | null>(null)
 
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
     const navigate = useNavigate()
@@ -42,26 +43,23 @@ export default function Administer() {
     //UTILIZA O HOOK useState
     const [imgURLs, setImgURLs] = useState<string[]>([])
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [selectedFilesProduct, setSelectedFilesProduct] = useState<File[]>([]);
     const [btnActive, setBtnActive] = useState<boolean>(false)
     const [isHover, setIsHover] = useState<boolean[]>([])
     const [typeScreen, setTypeScreen] = useState<string | undefined>(undefined)
 
-    const [nameProduct, setNameProduct] = useState<string>("Controle")
+    const [nameProduct, setNameProduct] = useState<string>("")
     const [imgsProduct, setImgsProduct] = useState<string[]>([
-        "https://imageswscdn.wslojas.com.br/files/29739/MED_produto-controle-celular-inova-bluetooth-con-142b-2614.jpg",
-        "https://imageswscdn.wslojas.com.br/files/29739/MED_produto-controle-sem-fio-inova-con-12866-6208.jpg"
+        "https://tse2.mm.bing.net/th?id=OIP.sWCvltMZF_s3mjA5sL-RdgHaE8&pid=Api&P=0&h=180"
     ])
     const [typesProduct, setTypesProduct] = useState<string[]>([
-        "Com fio",
-        "Sem fio"
+        "",
     ])
     const [colorsProduct, setColorsProduct] = useState<string[][]>([
-        ['#000000', '#3bb351', '#7045ef'],
-        ['#3570f8', '#ec0707']
+        ['#000000'],
     ])
     const [pricesProduct, setPricesProduct] = useState<string[]>([
-        "74.00",
-        "63.90"
+        "",
     ])
 
     //FUNÇÃO RESPONSÁVEL POR SETAR O CAMPO DE NOME DO PRODUTO
@@ -142,6 +140,33 @@ export default function Administer() {
             });
         }
     };
+    
+    //FUNÇÃO RESPONSÁVEL POR PEGAR A IMAGEM DOS ARQUIVOS DO USUÁRIO
+    const handleFileIMGProduct = (event: React.ChangeEvent<HTMLInputElement>, i: number) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+    
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const imageUrl = reader.result as string;
+    
+            // Atualiza corretamente sem afetar outros índices
+            setImgsProduct((prevImgs) => {
+                const newImgs = [...prevImgs]; // Clona o array para evitar mutação direta
+                newImgs[i] = imageUrl; // Atualiza apenas o índice correto
+                return newImgs;
+            });
+    
+            setSelectedFilesProduct((prevFiles) => {
+                const newFiles = [...prevFiles]; // Clona o array
+                newFiles[i] = file; // Atualiza apenas o índice correto
+                return newFiles;
+            });
+        };
+    
+        reader.readAsDataURL(file);
+    };
+    
 
     // FUNÇÃO PARA FAZER UPLOAD DAS IMAGENS PARA O FIREBASE
     const handleUpload = async () => {
@@ -193,6 +218,69 @@ export default function Administer() {
             console.error("Erro ao fazer upload das imagens:", error);
         }
     };
+    
+    // FUNÇÃO PARA FAZER UPLOAD DAS IMAGENS PARA O CLOUDINARY
+    const handleUploadProducts = async () => {
+    console.log(selectedFilesProduct);
+    if (selectedFilesProduct.length === 0) {
+        toast.error("Nenhuma imagem selecionada para upload.");
+        return;  // Se não houver arquivos, não continue o processo
+    }
+
+    try {
+        // Cria uma lista de promessas de upload
+        const uploadPromises = selectedFilesProduct.map((file) => {
+            return new Promise<string>((resolve, reject) => {
+                const id = Math.floor(Math.random() * 99999);
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'present');
+                formData.append('cloud_name', 'dgvxpeu0a');
+                formData.append('folder', 'images/products');
+                formData.append('public_id', String(id));
+
+                axios.post('https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload', formData)
+                    .then(response => {
+                        if (response.data.secure_url) {
+                            const url = response.data.secure_url;
+                            console.log('Imagem salva: ' + url);
+
+                            resolve(url); // Resolve a promessa com a URL da imagem
+                        } else {
+                            reject('Erro ao obter URL da imagem');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao fazer upload:', error);
+                        reject(error);
+                    });
+            });
+        });
+
+        // Aguarda todas as promessas de upload serem concluídas
+        const uploadedURLs = await Promise.all(uploadPromises);
+        console.log("Todas as imagens foram enviadas com sucesso:", uploadedURLs);
+
+        // Atualiza o estado imgsProduct com todas as URLs de uma vez
+        setImgsProduct(uploadedURLs); // Atualiza o estado após todas as imagens serem carregadas
+
+        // Agora que as imagens estão carregadas e o estado foi atualizado, podemos enviar o produto para o banco de dados
+        addProduct(uploadedURLs); // Passe as URLs para a função que lida com o banco de dados
+
+        // Limpa o estado de arquivos selecionados após o upload
+        setSelectedFilesProduct([]);
+
+        toast.success("Imagens enviadas com sucesso!");
+    } catch (error) {
+        console.error("Erro ao fazer upload das imagens:", error);
+        toast.error("Erro ao enviar imagens.");
+    }
+};
+
+    
+
+
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -229,6 +317,33 @@ export default function Administer() {
         setTypesProduct((prevTypes) => prevTypes.filter((_, index) => index !== i))
         setPricesProduct((prevPrices) => prevPrices.filter((_, index) => index !== i))
         setColorsProduct((prevColors) => prevColors.filter((_, index) => index !== i))
+    }
+    
+    //FUNÇÃO RESPONSÁVEL POR REMOVER O TIPO DO PRODUTO
+    function addType() {
+        setImgsProduct([...imgsProduct, "https://tse2.mm.bing.net/th?id=OIP.sWCvltMZF_s3mjA5sL-RdgHaE8&pid=Api&P=0&h=180"])
+        setTypesProduct([...typesProduct, "Desconhecido"])
+        setPricesProduct([...pricesProduct, "00.00"])
+        setColorsProduct([...colorsProduct, ["#000000"]])
+    }
+
+    //FUNÇÃO RESPONSÁVEL POR ADICIONAR UM NOVO PRODUTO
+    async function addProduct(uploadedURLs:string[]) {
+        axios.post(`https://back-tcc-murilo.onrender.com/add-product`, {
+            materials: {
+                name: nameProduct,
+                img: uploadedURLs,
+                type: typesProduct,
+                colors: colorsProduct,
+                prices: pricesProduct,
+            }
+        })
+        .then(function (response) {
+            console.log(response.data)
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
     }
 
     //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
@@ -336,8 +451,8 @@ export default function Administer() {
                 <div className={`bg-my-white w-[80%] flex flex-col flex-wrap items-start justify-center rounded-[12px] max-w-[900px]`}>
                     
                     <div className={`w-full flex flex-row items-center justiify-between gap-2`}>
-                        <p>name: </p>
                         <input
+                            placeholder={`Nome: `}
                             className={`flex-grow-[1] border-[1px] py-1 px-2 text-[14px] rounded-[8px]`}
                             onChange={handlenNameProduct}
                             value={nameProduct}
@@ -347,22 +462,36 @@ export default function Administer() {
                     {typesProduct.map((type, i) => (
                         <div
                             key={i}
-                            className={`w-full border-[1px] rounded-[6px] overflow-hidden my-2 flex flex-row flex-wrap items-start justify-start`}
+                            className={`relative w-full border-[1px] rounded-[6px] overflow-hidden my-2 flex flex-row flex-wrap items-start justify-start`}
                         >
-                            <img
+                            <div
                                 onClick={() => removeType(i)}
-                                src={imgsProduct[i]} className={`w-[200px] mx-auto`}
-                            />
-                            <div className={`flex flex-col items-center justify-center flex-grow-[1] h-[200px] font-bold`}>
+                                className={`absolute top-0 right-0 bg-my-red text-my-white p-3 rounded-bl-[4px] z-[2]`}
+                            >
+                                <FaTrashAlt />
+                            </div>
+                            
+                            <label
+                                htmlFor={`estampaProduct-${i}`}
+                                className={`bg-my-white p-3 rounded-[8px] flex items-center flex-col relative cursor-pointer`}
+                            >
+                                <img src={imgsProduct[i]} className={`w-full max-w-[300px] mx-auto`} />
+                            </label>
+
+                            <input ref={inputFileRefProduct} type="file" name={`estampaProduct-${i}`} id={`estampaProduct-${i}`} className={`hidden`} onChange={(event) => handleFileIMGProduct(event, i)} />
+
+                            <div className={`flex flex-col items-center justify-center flex-grow-[1] h-[200px] sm:h-[300px] font-bold`}>
                                 <input
                                     onChange={(e) => handlenTypeProduct(e, i)}
                                     className={`w-full items-center justify-center border-[1px] flex flex-grow-[1] text-center`}
                                     value={type}
+                                    placeholder={`Tipo do Produto`}
                                 />
                                 <input
                                     onChange={(e) => handlenPriceProduct(e, i)}
                                     className={`w-full items-center justify-center border-[1px] flex flex-grow-[1] text-center`}
-                                    value={`${pricesProduct[i].replace(".", ",")}`}
+                                    value={`${pricesProduct[i].replace(",", ".")}`}
+                                    placeholder={`Preço do Tipo do Produto`}
                                 />
                             </div>
                             <div className={`w-full`}>
@@ -400,6 +529,22 @@ export default function Administer() {
                             </div>
                         </div>
                     ))}
+
+                    <div
+                        onClick={() => addType()}
+                        className={`w-full bg-my-gray py-4 rounded-[6px] text-center text-my-white font-bold capitalize mb-6 mt-0`}
+                    >
+                        adicionar tipo
+                    </div>
+
+                    <div
+                        onClick={() => {
+                            handleUploadProducts()
+                        }}
+                        className={`w-full bg-my-primary py-4 rounded-[6px] flex items-center justify-center text-center mx-auto mb-2 mt-4 font-bold text-my-white`}
+                    >
+                        Adicionar produto
+                    </div>
                 </div>
             )}
 

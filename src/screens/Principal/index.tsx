@@ -82,8 +82,9 @@ export default function Principal() {
             </div>
 
             <div className="flex items-start justify-center flex-wrap py-4 w-[100%] relative max-w-[900px]">
-                {products != undefined && products.length >= 1 && products.map((product:any) => (
+                {products != undefined && products.length >= 1 && products.map((product:any, i:number) => (
                     <ProductCard
+                        key={i}
                         image={product.img[0]}
                         name={product.name}
                         price={product.prices[0].split('.')[0] <= 9 ? `0${product.prices[0].replace('.', ',')}` : `${product.prices[0].replace('.', ',')}`}

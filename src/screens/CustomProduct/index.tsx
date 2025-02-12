@@ -2,7 +2,7 @@
 import { useContext, useState, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify';
 import axios from 'axios'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 //IMPORTAÇÃO DOS COMPONENTES
 import Footer from "../../components/Footer";
@@ -27,11 +27,13 @@ export default function CustomProduct() {
     //UTILIZAÇÃO DO HOOKE DE NAVEGAÇÃO ENTRE PÁGINAS DO react-router-dom
     const navigate = useNavigate()
 
+    //UTILIZAÇÃO DO HOOKE DE PARÂMETROS DO react-router-dom
+    const { product } = useParams()
+
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { productSelected, toggleUser, setCart, user }:any = useContext(GlobalContext);
 
     //UTILIZAÇÃO DO HOOK useState
-    const [typeInd, setTypeInd] = useState<number>(0)
     const [arrayEstampas, setArrayEstampas] = useState<string[]>([])
     const [indPreEstampa, setIndPreEstampa] = useState<number>(0)
     const [isHoverMyPrint, setIsHoverMyPrint] = useState<boolean>(false)
@@ -46,25 +48,6 @@ export default function CustomProduct() {
     function toggleHoverPrint(state:boolean) {
         setIsHoverPrint(state)
     }
-    
-    //FUNÇÃO RESPONSÁVEL POR PEGAR O ÍNDICE DO PRODUTO
-    useEffect(() => {
-        if(productSelected.name == "Caneca"){
-            setTypeInd(0)
-        }else if(productSelected.name == "Camiseta"){
-            setTypeInd(1)
-        }else if(productSelected.name == "Almofada"){
-            setTypeInd(2)
-        }else if(productSelected.name == "Caderno"){
-            setTypeInd(3)
-        }else if(productSelected.name == "Agenda"){
-            setTypeInd(4)
-        }else if(productSelected.name == "Azulejo"){
-            setTypeInd(5)
-        }else if(productSelected.name == "Almochaveiro"){
-            setTypeInd(6)
-        }
-    },[])
 
     //FUNÇÃO RESPONSÁVEL POR LISTAR AS ESTAMPAS PRÉ-PRONTAS
     const fetchEstampas = async () => {
@@ -100,7 +83,6 @@ export default function CustomProduct() {
         }
     },[])
 
-
     //UTILIZA O HOOK useState
     const [size, setSize] = useState<string | undefined>('pp')
     const [color, setColor] = useState<string | undefined>('')
@@ -113,27 +95,28 @@ export default function CustomProduct() {
 
     //FUNÇÃO RESPONSÁEL POR PEGAR O INDICE DO PRODUTO
     function getIndice() {
+        console.log(productSelected.material)
         switch (productSelected.material) {
             case 'porcelana':
                 setProductID(0)
-                setColor('white')
             break;
                 
             case 'plástica':
                 setProductID(1)
-                setColor('white')
             break;
             
             case 'mágica':
                 setProductID(2)
-                setColor('red')
             break;
             
             case 'de colher':
                 setProductID(3)
-                setColor('white')
+                break;
+                
+            case 'Sem fio':
+                setProductID(1)
             break;
-        
+
             default:
                 break;
         }
@@ -142,23 +125,26 @@ export default function CustomProduct() {
     //FUNÇÃO RESPONSÁVEL POR COLOCAR A COR DO PRIMEIRO ÍNDICE
     useEffect(() => {
         //VERIFICA SE JÁ TEM PRODUTOS CADASTRADOS
-        if(products){
-            setColor(products[typeInd].colors[productID][0])
+        if(products && products.colors){
+            console.log("CORES: "+products.colors[productID][0])
+            setColor(products.colors[productID][0])
         }
-    },[productID])
+    },[products, productID])
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
     function getProducts() {
         getIndice()
-        axios.get('https://back-tcc-murilo.onrender.com/all-products')
+        axios.get(`https://back-tcc-murilo.onrender.com/get-product/${product}`)
         .then(function (response) {
             
             //PEGA O PRODUTO
             setProducts(response.data)
             
-            console.log(response.data[0].colors[productID])
-            console.log(response.data[0].type[productID])
-            console.log(response.data[0].prices[productID])
+            console.log(response.data.colors[productID])
+            console.log(response.data.type[productID])
+            console.log(response.data.prices[productID])
+            console.log("COLOR: "+response.data.colors[productID][0])
+            setColor(response.data.colors[productID][0])
         })
         .catch(function (error) {
             console.log(error)
@@ -245,8 +231,8 @@ export default function CustomProduct() {
                         size: size,
                         material: productSelected.material,
                         color: color,
-                        colors: products[typeInd].colors[productID],
-                        types: products[typeInd].type
+                        colors: products.colors[productID],
+                        types: products.type
                     }
                 })
                 .then(function (response) {
@@ -304,8 +290,8 @@ export default function CustomProduct() {
                                 size: size,
                                 material: productSelected.material,
                                 color: color,
-                                colors: products[typeInd].colors[productID],
-                                types: products[typeInd].type
+                                colors: products.colors[productID],
+                                types: products.type
                             }
                         })
                         .then(function (response) {
@@ -430,7 +416,7 @@ export default function CustomProduct() {
                 <div className={`w-[90%] flex flex-row flex-wrap bg-my-white p-3 rounded-[12px] justify-start gap-4 mb-5`}>
                     <h1 className={`w-full text-left text-[18px] font-bold text-my-secondary`}>Selecione a cor</h1>
 
-                    {products && products[typeInd].colors[productID].map((materialColor:string, i:number) => (
+                    {products && products.colors[productID].map((materialColor:string, i:number) => (
                         <div
                             key={i}
                             onClick={() => setColor(materialColor)}

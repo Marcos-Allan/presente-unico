@@ -1,6 +1,6 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
 import { useContext, useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import { Link } from 'react-router'
@@ -30,6 +30,9 @@ export default function EditProductCart() {
     //UTILIZAÇÃO DO HOOK DE NAVEGAÇÃO DO react-router-dom
     const navigate = useNavigate()
 
+    //UTILIZAÇÃO DO HOOKE DE PARÂMETROS DO react-router-dom
+    const { product } = useParams()
+
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { productSelectedEdit, setProductSelectedEdit, user, toggleLoading, setCart, toggleUser }:any = useContext(GlobalContext);
 
@@ -38,7 +41,7 @@ export default function EditProductCart() {
     const [myPrice, setMyPrice] = useState<any>(productSelectedEdit.price)
     
     //UTILIZAÇÃO DO HOOK useState
-    const [myEstampa, setMyEstampa] = useState<any>("https://res.cloudinary.com/dgvxpeu0a/image/upload/v1738601083/images/estampas/34818.jpg")
+    const [myEstampa, setMyEstampa] = useState<any>("")
     const [myMaterial, setMyMaterial] = useState<any>(productSelectedEdit.material)
     const [myQuantity, setMyQuantity] = useState<any>(productSelectedEdit.quantity)
     const [mySize, setMySize] = useState<any>(productSelectedEdit.size)
@@ -52,7 +55,6 @@ export default function EditProductCart() {
     const [materiais, setMateriais] = useState<any>()
     
     const [products, setProducts] = useState<any>()
-    const [typeInd, setTypeInd] = useState<number>(0)
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -70,32 +72,28 @@ export default function EditProductCart() {
     useEffect(() => {
         console.log(productSelectedEdit.name)
         if(productSelectedEdit.name == "Caneca"){
-            setTypeInd(0)
             setMateriais(['porcelana', 'plástica', 'mágica', 'de colher'])
             setSizes(productSelectedEdit.types)
         }else if(productSelectedEdit.name == "Camiseta"){
-            setTypeInd(1)
             setMateriais(['poliester'])
             setSizes(['pp', 'p', 'm', 'g', 'gg', 'xg'])
         }else if(productSelectedEdit.name == "Almofada"){
-            setTypeInd(2)
             setMateriais(['dois lados 28x20cm', 'dois lados 40x28cm', 'cubo 15x15cm', 'cubo 20x20cm'])
             setSizes(['pp'])
         }else if(productSelectedEdit.name == "Caderno"){
-            setTypeInd(3)
             setMateriais(['A4'])
             setSizes(['pp'])
         }else if(productSelectedEdit.name == "Agenda"){
-            setTypeInd(4)
             setMateriais(['17x9,4cm'])
             setSizes(['pp'])
         }else if(productSelectedEdit.name == "Azulejo"){
-            setTypeInd(5)
             setMateriais(['15x15cm', '10x10cm'])
             setSizes(['pp'])
         }else if(productSelectedEdit.name == "Almochaveiro"){
-            setTypeInd(6)
             setMateriais(['7x7cm'])
+            setSizes(['pp'])
+        }else if(productSelectedEdit.name == "COntrole"){
+            setMateriais(['Com fio', 'Sem fio'])
             setSizes(['pp'])
         }
     },[productSelectedEdit])
@@ -155,6 +153,11 @@ export default function EditProductCart() {
                 setProductID(3)
                 console.log(3)
             break;
+            
+            case 'Sem fio':
+                setProductID(1)
+                console.log(1)
+            break;
         
             default:
                 break;
@@ -166,7 +169,7 @@ export default function EditProductCart() {
         //CHAMA A FUNÇÃO QUE PEGA OS ITEMS ATUAIS
         getIndice()
         
-        axios.get('https://back-tcc-murilo.onrender.com/all-products')
+        axios.get(`https://back-tcc-murilo.onrender.com/get-product/${product}`)
         .then(function (response) {
             
             //PEGA O PRODUTO ESCOLHIDO
@@ -202,7 +205,7 @@ export default function EditProductCart() {
         setMyQuantity(productSelectedEdit.quantity)
         setMySize(productSelectedEdit.size)
         setImage(productSelectedEdit.image)
-        // setImage(products[typeInd].img[materiais.indexOf(productSelectedEdit.material)])
+        // setImage(products.img[materiais.indexOf(productSelectedEdit.material)])
     },[productSelectedEdit])
 
     const handleSize = () => {
@@ -235,10 +238,10 @@ export default function EditProductCart() {
         setMyMaterial(materiais[nextIndex]);
 
         //ATUALIZA O PREÇO DO PRODUTO COM BASE NO productID
-        setMyPrice(products[typeInd].prices[nextIndex])
+        setMyPrice(products.prices[nextIndex])
         
         //ATUALIZA A IMAGEM DO PRODUTO COM BASE NO productID
-        setImage(products[typeInd].img[nextIndex])
+        setImage(products.img[nextIndex])
 
         //ATUALIZA O INDICE DO PRODUTO
         setProductID(nextIndex);
@@ -258,6 +261,7 @@ export default function EditProductCart() {
             //EXECUTA A FUNÇÃO ASSIM QUE O ARQUIVO É CARREGADO
             reader.onloadend = () => {
                 //SETA AS IMAGENS COMO URL
+                console.log(reader.result as string)
                 setMyEstampa(reader.result as string)
             }
             //LÊ A URL DO ARQUIVO
@@ -290,7 +294,7 @@ export default function EditProductCart() {
                     itemId: productSelectedEdit.id,
                     novosDados: {
                         id: productSelectedEdit.id,
-                        image: products[typeInd].img[productID],
+                        image: products.img[productID],
                         material: myMaterial,
                         name: myName,
                         price: myPrice,
@@ -312,7 +316,7 @@ export default function EditProductCart() {
                     //SALVA O ITEM A EDITAR NO LOCALSTORAGE DO NAVEGADOR
                     localStorage.setItem('productPUE', JSON.stringify({
                         id: productSelectedEdit.id,
-                        image: products[typeInd].img[productID],
+                        image: products.img[productID],
                         name: myName,
                         print: myEstampa,
                         size: mySize,
@@ -324,7 +328,7 @@ export default function EditProductCart() {
                     //SALVA O ITEM A EDITAR NO FRONTEND DA APLICAÇÃO
                     setProductSelectedEdit({
                         id: productSelectedEdit.id,
-                        image: products[typeInd].img[productID],
+                        image: products.img[productID],
                         name: myName,
                         print: myEstampa,
                         size: mySize,
@@ -385,7 +389,7 @@ export default function EditProductCart() {
                             itemId: productSelectedEdit.id,
                             novosDados: {
                                 id: productSelectedEdit.id,
-                                image:  products[typeInd].img[productID],
+                                image:  products.img[productID],
                                 material: myMaterial,
                                 name: myName,
                                 price: myPrice,

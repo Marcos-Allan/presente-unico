@@ -1,6 +1,6 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
 import { useContext, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import axios from 'axios'
 
 //IMPORTAÇÃO DOS COMPONENTES
@@ -9,11 +9,11 @@ import Footer from "../../components/Footer";
 import ModalUser from '../../components/ModalUser';
 import ModalCart from '../../components/ModalCart';
 import ModalLogout from '../../components/ModalLogout';
+import ModalFinishBuy from '../../components/ModalFinishBuy';
+import ChoiceQuantityCard from '../../components/ChoiceQuantityCard';
 
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
-import ModalFinishBuy from '../../components/ModalFinishBuy';
-import ChoiceQuantityCard from '../../components/ChoiceQuantityCard';
 
 //IMPORTAÇÃO DOS ICONES
 import { FaPlus } from "react-icons/fa"
@@ -21,6 +21,9 @@ import { FaPlus } from "react-icons/fa"
 export default function Product() {
     //UTILIZAÇÃO DO HOOK DE NAVEGAÇÃO DO react-router-dom
     const navigate = useNavigate()
+
+    //UTILIZAÇÃO DO HOOKE DE PARÂMETROS DO react-router-dom
+    const { product } = useParams()
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { productSelected, setProductSelected, toggleProduct, user }:any = useContext(GlobalContext);
@@ -87,18 +90,18 @@ export default function Product() {
             }
         },
         {
-            //AGENDA
-            material: '',
-            customArea: '',
+            //CHAVEIRO
+            material: 'Tecido macio e enchimento de fibra siliconada antialérgica',
+            customArea: 'Frente e verso da almofada',
             optionsCustom: {
                 sizes: '',
                 colors: ''
             }
         },
         {
-            //CHAVEIRO
-            material: 'Tecido macio e enchimento de fibra siliconada antialérgica',
-            customArea: 'Frente e verso da almofada',
+            //CONTROLE
+            material: 'Controle de alta compatibilidade com dispositivos bluetooth e via cabo USB',
+            customArea: 'Frente e verso do controle',
             optionsCustom: {
                 sizes: '',
                 colors: ''
@@ -129,20 +132,24 @@ export default function Product() {
             setTypeInd(5)
         }else if(productSelected.name == "Almochaveiro"){
             setTypeInd(6)
+        }else if(productSelected.name == "Controle"){
+            setTypeInd(7)
         }
     },[])
 
     //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
     function getProducts() {
-        axios.get('https://back-tcc-murilo.onrender.com/all-products')
+        axios.get(`https://back-tcc-murilo.onrender.com/get-product/${product}`)
         .then(function (response) {
             console.log(response.data)
             
             setProducts(response.data)
 
-            console.log(response.data)
-            console.log(response.data[0].colors[productID])
-            console.log(response.data[0].prices[productID])
+            response.data.type.map((mk:any, i:any) => {
+                console.log(`${i}° ${mk}`)
+            })
+            console.log(response.data.colors[productID])
+            console.log(response.data.img[productID])
         })
         .catch(function (error) {
             console.log(error)
@@ -183,7 +190,7 @@ export default function Product() {
             <div className={`bg-[#efefef] rounded-[16px] mt-5 flex items-center justify-center p-2 w-[80%] min-h-[400px] max-w-[900px]`}>
                 {products && (
                     <img
-                        src={products[typeInd].img[productID]}
+                        src={products.img[productID]}
                         alt=""
                         className={`w-[330px]`}
                     />
@@ -197,28 +204,25 @@ export default function Product() {
             </div>
 
             <div className={`w-[85%] flex flex-row justify-around overflow-x-scroll scrollbar scrollbar-none min-h-[180px] mt-3 max-w-[900px]`}>
-            {products && products.length >= 1 && (
-                <>
-                    {products[typeInd].type && products[typeInd].type.map((sla:any, i:number) => (
-                        <div
-                            key={i}
-                            id={sla}
-                            onClick={() => {
-                                setProductID(i);
-                            }}
-                            className={`w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center  rounded-[4px] cursor-pointer transition-all duration-[.3s] border-[2px] border-[#efefef] hover:border-my-secondary ${productID == i && 'border-my-secondary'}`}
-                        >
-                            <div className={`flex-grow-[1] flex items-center justify-center`}>
-                                <img
-                                    src={products[typeInd].img[i]}
-                                    className="w-[120px] p-1"
-                                />
-                            </div>
-                            <p className="mt-1 w-full text-center pb-5 font-bold text-my-secondary">{products[typeInd].type[i]}</p>
+                {products && products.type.map((sla:any, i:number) => (
+                    <div
+                        key={i}
+                        id={String(sla)}
+                        onClick={() => {
+                            setProductID(i);
+                            console.log(products.colors[i])
+                        }}
+                        className={`w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center  rounded-[4px] cursor-pointer transition-all duration-[.3s] border-[2px] border-[#efefef] hover:border-my-secondary ${productID == i && 'border-my-secondary'}`}
+                    >
+                        <div className={`flex-grow-[1] flex items-center justify-center`}>
+                            <img
+                                src={products.img[i]}
+                                className="w-[120px] p-1"
+                            />
                         </div>
-                    ))}
-                </>
-            )}
+                        <p className="mt-1 w-full text-center pb-5 font-bold text-my-secondary">{products.type[i]}</p>
+                    </div>
+                ))}
             </div>
 
 
@@ -231,9 +235,9 @@ export default function Product() {
             {products && (
                 <p className={`text-[36px] text-my-primary font-inter font-bold mb-4 max-w-[900px]`}>R$
                     <span className="text-[48px]">
-                        {String(Number(products[typeInd].prices[productID])).split('.')[0]}
+                        {String(Number(products.prices[productID])).split('.')[0]}
                     </span>,
-                    <span>{String(String(Number(products[typeInd].prices[productID]).toFixed(2))).replace('.', ',').split(',')[1]}</span>
+                    <span>{String(String(Number(products.prices[productID]).toFixed(2))).replace('.', ',').split(',')[1]}</span>
                 </p>
             )}
 
@@ -242,36 +246,36 @@ export default function Product() {
                     {products && (
                         <>
                             <ChoiceQuantityCard
-                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
-                                priceProduct={String(products[typeInd].prices[productID]).replace(',','.')}
+                                priceProductQuantity={String(products.prices[productID]).replace(',','.')}
+                                priceProduct={String(products.prices[productID]).replace(',','.')}
                                 quantity={1}
                                 active={quantity == 1 ? true : false}
                                 onClick={() => selectQuantity(1)}
                             />
                             <ChoiceQuantityCard 
-                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
-                                priceProduct={String(Number(Number(products[typeInd].prices[productID].replace(',','.')) * 10).toFixed(2))}
+                                priceProductQuantity={String(products.prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products.prices[productID].replace(',','.')) * 10).toFixed(2))}
                                 quantity={10}
                                 active={quantity == 10 ? true : false}
                                 onClick={() => selectQuantity(10)}
                             />
                             <ChoiceQuantityCard
-                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
-                                priceProduct={String(Number(Number(products[typeInd].prices[productID].replace(',','.')) * 15).toFixed(2))}
+                                priceProductQuantity={String(products.prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products.prices[productID].replace(',','.')) * 15).toFixed(2))}
                                 quantity={15}
                                 active={quantity == 15 ? true : false}
                                 onClick={() => selectQuantity(15)}
                             />
                             <ChoiceQuantityCard
-                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
-                                priceProduct={String(Number(Number(products[typeInd].prices[productID].replace(',','.')) * 20).toFixed(2))}
+                                priceProductQuantity={String(products.prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products.prices[productID].replace(',','.')) * 20).toFixed(2))}
                                 quantity={20}
                                 active={quantity == 20 ? true : false}
                                 onClick={() => selectQuantity(20)}
                             />
                             <ChoiceQuantityCard
-                                priceProductQuantity={String(products[typeInd].prices[productID]).replace(',','.')}
-                                priceProduct={String(Number(Number(products[typeInd].prices[productID].replace(',','.')) * 50).toFixed(2))}
+                                priceProductQuantity={String(products.prices[productID]).replace(',','.')}
+                                priceProduct={String(Number(Number(products.prices[productID].replace(',','.')) * 50).toFixed(2))}
                                 quantity={50}
                                 active={quantity == 50 ? true : false}
                                 onClick={() => selectQuantity(50)}
@@ -302,20 +306,20 @@ export default function Product() {
             <button
                 onClick={() => {
                     selectProduct(
-                        products[typeInd].img[productID],
+                        products.img[productID],
                         `${productSelected.name}`,
-                        `${String(Number(products[typeInd].prices[productID]))}`,
-                        {materiais: products[typeInd].type, colors: products[typeInd].colors[productID]},
-                        products[typeInd].type[productID]
+                        `${String(Number(products.prices[productID]))}`,
+                        {materiais: products.type, colors: products.colors[productID]},
+                        products.type[productID]
                         )
                     toggleProduct({
-                        image: products[typeInd].img[productID],
+                        image: products.img[productID],
                         teste: 2,
                         name: `${productSelected.name}`,
-                        prices: `${String(Number(products[typeInd].prices[productID]))}`,
-                        materials: {materiais: products[typeInd].type, colors: products[typeInd].colors[productID]},
+                        prices: `${String(Number(products.prices[productID]))}`,
+                        materials: {materiais: products.type, colors: products.colors[productID]},
                         quantity: quantity,
-                        material: products[typeInd].type[productID],
+                        material: products.type[productID],
                     })
                 }}
                 className={`mt-6 mb-2 text-my-white bg-my-primary w-[70%] rounded-[16px] py-4 text-[20px] font-inter font-bold max-w-[900px] transition-all duration-[.3s] border-[1px] border-my-primary hover:text-my-primary hover:bg-transparent cursor-pointer`}

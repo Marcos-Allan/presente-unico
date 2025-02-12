@@ -93,7 +93,7 @@ export default function ModalCart() {
                                                 })
 
                                                 //NAVEGA PARA A PÁGINA DE EDIÇÃO DO PRODUTO
-                                                navigate(`/cart/edit/${cart.name}`)
+                                                navigate(`/cart/edit/${item.name}`)
                                             }}
                                             className={`bg-my-secondary w-8 h-8 flex items-center justify-center absolute top-[-20px] right-[-20px] rounded-[50%]`}
                                         >

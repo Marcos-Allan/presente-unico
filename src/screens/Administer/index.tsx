@@ -46,7 +46,9 @@ export default function Administer() {
     const [selectedFilesProduct, setSelectedFilesProduct] = useState<File[]>([]);
     const [btnActive, setBtnActive] = useState<boolean>(false)
     const [isHover, setIsHover] = useState<boolean[]>([])
+    const [isHoverEstampa, setIsHoverEstampa] = useState<boolean[]>([])
     const [typeScreen, setTypeScreen] = useState<string | undefined>(undefined)
+    const [arrayEstampas, setArrayEstampas] = useState<string[]>([])
 
     const [nameProduct, setNameProduct] = useState<string>("")
     const [imgsProduct, setImgsProduct] = useState<string[]>([
@@ -168,119 +170,110 @@ export default function Administer() {
     };
     
 
-    // FUNÇÃO PARA FAZER UPLOAD DAS IMAGENS PARA O FIREBASE
     const handleUpload = async () => {
         if (selectedFiles.length === 0) {
-            toast.error("Nenhuma imagem selecionada para upload.")
-            return
+            toast.error("Nenhuma imagem selecionada para upload.");
+            return;
+        }
+    
+        try {
+            const uploadPromises = selectedFiles.map(async (file) => {
+                // GERA UM ID ALEATÓRIO
+                const id = Math.floor(Math.random() * 99999);
+    
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", "present");
+                formData.append("cloud_name", "dgvxpeu0a");
+                formData.append("folder", "images/pre-estampas");
+                formData.append("public_id", String(id));
+    
+                const response = await axios.post(
+                    "https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload",
+                    formData
+                );
+    
+                if (response.data.secure_url) {
+                    const url = response.data.secure_url;
+                    console.log("Imagem salva: " + url);
+                    return url; // Retorna a URL da imagem
+                } else {
+                    throw new Error("Erro ao obter a URL da imagem.");
+                }
+            });
+    
+            const uploadedURLs = await Promise.all(uploadPromises);
+            console.log("Todas as imagens foram enviadas com sucesso:", uploadedURLs);
+    
+            // LIMPA O ESTADO APÓS O UPLOAD
+            setSelectedFiles([]);
+            setImgURLs([]);
+
+        } catch (error) {
+            console.error("Erro ao fazer upload das imagens:", error);
+            toast.error("Erro ao fazer upload das imagens.");
+        }
+    };
+    
+    
+    // FUNÇÃO PARA FAZER UPLOAD DAS IMAGENS PARA O CLOUDINARY
+    const handleUploadProducts = async () => {
+        console.log(selectedFilesProduct);
+        if (selectedFilesProduct.length === 0) {
+            toast.error("Nenhuma imagem selecionada para upload.");
+            return;  // Se não houver arquivos, não continue o processo
         }
 
         try {
-            const uploadPromises = selectedFiles.map((file) => {
-                return new Promise<string>(() => {
-                    //GERA UM ID ALEATÓRIO
-                    const id = Math.floor(Math.random() * 99999)
-                    
+            // Cria uma lista de promessas de upload
+            const uploadPromises = selectedFilesProduct.map((file) => {
+                return new Promise<string>((resolve, reject) => {
+                    const id = Math.floor(Math.random() * 99999);
+
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('upload_preset', 'present');
                     formData.append('cloud_name', 'dgvxpeu0a');
-                    formData.append('folder', 'images/pre-estampas');
+                    formData.append('folder', 'images/products');
                     formData.append('public_id', String(id));
-                    
 
                     axios.post('https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload', formData)
-                    .then(response => {
-                        if (response.data.secure_url) {
+                        .then(response => {
+                            if (response.data.secure_url) {
+                                const url = response.data.secure_url;
+                                console.log('Imagem salva: ' + url);
 
-                            const url = response.data.secure_url;
-
-                            //ESCREVE A URL DA IMAGEM NO CONSOLE
-                            console.log('imagem salva: '+ url)
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro ao fazer upload:', error);
-                    });
-
+                                resolve(url); // Resolve a promessa com a URL da imagem
+                            } else {
+                                reject('Erro ao obter URL da imagem');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao fazer upload:', error);
+                            reject(error);
+                        });
                 });
             });
 
+            // Aguarda todas as promessas de upload serem concluídas
             const uploadedURLs = await Promise.all(uploadPromises);
             console.log("Todas as imagens foram enviadas com sucesso:", uploadedURLs);
 
-            //LIMPA O ESTADO APÓS O UPLOAD
-            setSelectedFiles([]);
-            setImgURLs([]);
+            // Atualiza o estado imgsProduct com todas as URLs de uma vez
+            setImgsProduct(uploadedURLs); // Atualiza o estado após todas as imagens serem carregadas
+
+            // Agora que as imagens estão carregadas e o estado foi atualizado, podemos enviar o produto para o banco de dados
+            addProduct(uploadedURLs); // Passe as URLs para a função que lida com o banco de dados
+
+            // Limpa o estado de arquivos selecionados após o upload
+            setSelectedFilesProduct([]);
 
             toast.success("Imagens enviadas com sucesso!");
         } catch (error) {
             console.error("Erro ao fazer upload das imagens:", error);
+            toast.error("Erro ao enviar imagens.");
         }
     };
-    
-    // FUNÇÃO PARA FAZER UPLOAD DAS IMAGENS PARA O CLOUDINARY
-    const handleUploadProducts = async () => {
-    console.log(selectedFilesProduct);
-    if (selectedFilesProduct.length === 0) {
-        toast.error("Nenhuma imagem selecionada para upload.");
-        return;  // Se não houver arquivos, não continue o processo
-    }
-
-    try {
-        // Cria uma lista de promessas de upload
-        const uploadPromises = selectedFilesProduct.map((file) => {
-            return new Promise<string>((resolve, reject) => {
-                const id = Math.floor(Math.random() * 99999);
-
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('upload_preset', 'present');
-                formData.append('cloud_name', 'dgvxpeu0a');
-                formData.append('folder', 'images/products');
-                formData.append('public_id', String(id));
-
-                axios.post('https://api.cloudinary.com/v1_1/dgvxpeu0a/image/upload', formData)
-                    .then(response => {
-                        if (response.data.secure_url) {
-                            const url = response.data.secure_url;
-                            console.log('Imagem salva: ' + url);
-
-                            resolve(url); // Resolve a promessa com a URL da imagem
-                        } else {
-                            reject('Erro ao obter URL da imagem');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro ao fazer upload:', error);
-                        reject(error);
-                    });
-            });
-        });
-
-        // Aguarda todas as promessas de upload serem concluídas
-        const uploadedURLs = await Promise.all(uploadPromises);
-        console.log("Todas as imagens foram enviadas com sucesso:", uploadedURLs);
-
-        // Atualiza o estado imgsProduct com todas as URLs de uma vez
-        setImgsProduct(uploadedURLs); // Atualiza o estado após todas as imagens serem carregadas
-
-        // Agora que as imagens estão carregadas e o estado foi atualizado, podemos enviar o produto para o banco de dados
-        addProduct(uploadedURLs); // Passe as URLs para a função que lida com o banco de dados
-
-        // Limpa o estado de arquivos selecionados após o upload
-        setSelectedFilesProduct([]);
-
-        toast.success("Imagens enviadas com sucesso!");
-    } catch (error) {
-        console.error("Erro ao fazer upload das imagens:", error);
-        toast.error("Erro ao enviar imagens.");
-    }
-};
-
-    
-
-
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
@@ -297,6 +290,10 @@ export default function Administer() {
     //FUNÇÃO RESPONSÁVEL POR TROCAR O ESTADO DE isHover
     function toggleHover(index: number, state: boolean) {
         setIsHover((prev) => prev.map((item, i) => (i === index ? state : item)));
+    }
+    
+    function toggleHoverEstampa(index: number, state: boolean) {
+        setIsHoverEstampa((prev) => prev.map((item, i) => (i === index ? state : item)));
     }
 
     //FUNÇÃO RESPONSÁVEL POR REMOVER A IMAGEM
@@ -346,6 +343,39 @@ export default function Administer() {
         })
     }
 
+    //FUNÇÃO RESPONSÁVEL POR LISTAR AS ESTAMPAS PRÉ-PRONTAS
+    const fetchEstampas = async () => {
+        axios.get("https://back-tcc-murilo.onrender.com/get-images")
+        .then(function (response) {
+            console.log(response.data)
+            //COLOCA AS ESTAMPAS NO ARRAY DE ESTAMPAS
+            setArrayEstampas(response.data)
+            setIsHoverEstampa((prev) => [...prev, false]);
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    };
+
+    //FUNÇÃO RESPONSÁVEL POR REMOVER A ESTAMPA
+    function removeEstampa(imgURL:string) {
+        axios.delete(`https://back-tcc-murilo.onrender.com/delete-image`, {
+            data: { publicId: imgURL }
+        })
+        .then(function (response) {
+            console.log(response)
+            fetchEstampas()
+            toast.success("Estampa removida com sucesso!")
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    }
+
+    useEffect(() => {
+        fetchEstampas()
+    },[typeScreen])
+
     //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
     const notifySucess = (message:string) => toast.success(message);
 
@@ -392,6 +422,37 @@ export default function Administer() {
             
             {typeScreen == 'adm-estampas' && (
                 <div className={`bg-my-white w-[80%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
+                    
+                    <div className={`w-full overflow-scroll flex items-center justify-start scrollbar-none mb-3 gap-1`}>
+                        {arrayEstampas.map((img, i) => (
+                            <div
+                                style={{ backgroundImage: `url('${img}')` }}
+                                onMouseEnter={() => toggleHoverEstampa(i, true)}
+                                onMouseLeave={() => toggleHoverEstampa(i, false)}
+                                className={`relative min-h-[100px] min-w-[200px] bg-cover bg-center`}
+                                onClick={() => {
+                                    const imgURL = img.split('upload')[1].split('.')[0].split('/')
+                                    let pubID:string = ""
+                                    imgURL.map((part:string, i:number) => {
+                                        if(i >= 2){
+                                            pubID += `${part}/`
+                                        }
+                                    })
+                                    console.log(pubID.slice(0, -1))
+                                    removeEstampa(pubID.slice(0, -1))
+                                }}                            
+                            >
+                                <div
+                                    className={`transition-all duration-[.3s] cursor-pointer w-full h-full absolute top-0 left-0 bg-my-red ${isHoverEstampa[i] == true ? 'opacity-[0.8]' : 'opacity-[0]'} flex items-center justify-center text-[24px] text-my-white`}
+                                >
+                                    <FaTrashCan
+                                        className={`transition-all duration-[.3s] ${isHoverEstampa[i] == true ? 'scale-[1.4] rotate-[360deg]' : 'scale-[1.0] rotate-[0deg]'}`}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
                     <label
                         htmlFor="estampa"
                         className={`bg-[#efefef] w-full flex items-center mb-3 flex-col transition-all duration-[.3s] border-transparent justify-between mr-2 p-1 rounded-[8px] border-[1px] cursor-pointer hover:bg-transparent hover:border-my-secondary py-4`}

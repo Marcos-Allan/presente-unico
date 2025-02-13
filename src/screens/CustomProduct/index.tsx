@@ -60,7 +60,7 @@ export default function CustomProduct() {
         .catch(function (error) {
             console.log(error)
         })
-      };
+    };
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {

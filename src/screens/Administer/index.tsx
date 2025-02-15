@@ -49,7 +49,10 @@ export default function Administer() {
     const [isHoverEstampa, setIsHoverEstampa] = useState<boolean[]>([])
     const [typeScreen, setTypeScreen] = useState<string | undefined>(undefined)
     const [arrayEstampas, setArrayEstampas] = useState<string[]>([])
+    const [products, setProducts] = useState<any>(undefined)
+    const [productID, setProductID] = useState<any>(undefined)
 
+    const [productType, setProductType] = useState<string>("new")
     const [nameProduct, setNameProduct] = useState<string>("")
     const [imgsProduct, setImgsProduct] = useState<string[]>([
         "https://tse2.mm.bing.net/th?id=OIP.sWCvltMZF_s3mjA5sL-RdgHaE8&pid=Api&P=0&h=180"
@@ -219,10 +222,6 @@ export default function Administer() {
     // FUNÇÃO PARA FAZER UPLOAD DAS IMAGENS PARA O CLOUDINARY
     const handleUploadProducts = async () => {
         console.log(selectedFilesProduct);
-        if (selectedFilesProduct.length === 0) {
-            toast.error("Nenhuma imagem selecionada para upload.");
-            return;  // Se não houver arquivos, não continue o processo
-        }
 
         try {
             // Cria uma lista de promessas de upload
@@ -260,15 +259,27 @@ export default function Administer() {
             console.log("Todas as imagens foram enviadas com sucesso:", uploadedURLs);
 
             // Atualiza o estado imgsProduct com todas as URLs de uma vez
-            setImgsProduct(uploadedURLs); // Atualiza o estado após todas as imagens serem carregadas
+            if(selectedFilesProduct.length >= 1){
 
-            // Agora que as imagens estão carregadas e o estado foi atualizado, podemos enviar o produto para o banco de dados
-            addProduct(uploadedURLs); // Passe as URLs para a função que lida com o banco de dados
+                const newFiles = uploadedURLs
+                const updatedFiles = newFiles.map((file, index) => file !== undefined && file !== null ? file : imgsProduct[index])
+                setImgsProduct(updatedFiles); // Atualiza o estado após todas as imagens serem carregadas
 
-            // Limpa o estado de arquivos selecionados após o upload
-            setSelectedFilesProduct([]);
-
-            toast.success("Imagens enviadas com sucesso!");
+                if(productType == "new") {
+                    addProduct(updatedFiles);
+                }else if(productType == "update") {
+                    updateProduct(updatedFiles)
+                }
+                
+                // Limpa o estado de arquivos selecionados após o upload
+                setSelectedFilesProduct([]);
+            }else{
+                if(productType == "new") {
+                    addProduct(imgsProduct);
+                }else if(productType == "update") {
+                    updateProduct(imgsProduct)
+                }
+            }
         } catch (error) {
             console.error("Erro ao fazer upload das imagens:", error);
             toast.error("Erro ao enviar imagens.");
@@ -337,6 +348,41 @@ export default function Administer() {
         })
         .then(function (response) {
             console.log(response.data)
+            toast.success("Item adicionado com sucesso")
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    }
+
+    //FUNÇÃO RESPONSÁVEL POR LISTAR OS PRODUTOS
+    function getProducts() {
+        axios.get('https://back-tcc-murilo.onrender.com/all-products')
+        .then(function (response) {
+            setProducts(response.data)
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    }
+
+    //FUNÇÃO RESPONSÁVEL POR PEGAR OS PRODUTOS DO BACK-END
+    function getProduct(product:string) {
+        axios.get(`https://back-tcc-murilo.onrender.com/get-product/${product}`)
+        .then(function (response) {
+            setNameProduct(response.data.name)
+            setImgsProduct(response.data.img)
+            setColorsProduct(response.data.colors)
+            setTypesProduct(response.data.type)
+            setPricesProduct(response.data.prices)
+            setProductType("update")
+            setProductID(response.data._id)
+
+            console.log(response.data.type)
+            console.log(typesProduct)
+            console.log(response.data.type[0])
+            console.log(response.data.prices[0])
+            console.log("COLOR: "+response.data.colors[0][0])
         })
         .catch(function (error) {
             console.log(error)
@@ -372,9 +418,30 @@ export default function Administer() {
         })
     }
 
+    //FUNÇÃO RESPONSÁVEL POR ATUALIZAR O PRODUTO
+    function updateProduct(uploadedURLs:string[]) {
+        axios.put(`https://back-tcc-murilo.onrender.com/update-product/${productID}`, {
+            name: nameProduct,
+            img: uploadedURLs,
+            type: typesProduct,
+            colors: colorsProduct,
+            prices: pricesProduct
+        })
+        .then(function (response) {
+            console.log(response.data)
+            setImgsProduct(response.data.img)
+            toast.success("Item atualizado com sucesso")
+            getProducts()
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    }
+
     useEffect(() => {
         fetchEstampas()
-    },[typeScreen])
+        getProducts()
+    },[typeScreen, productType])
 
     //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
     const notifySucess = (message:string) => toast.success(message);
@@ -511,7 +578,58 @@ export default function Administer() {
             {typeScreen == 'adm-produto' && (
                 <div className={`bg-my-white w-[80%] flex flex-col flex-wrap items-start justify-center rounded-[12px] max-w-[900px]`}>
                     
-                    <div className={`w-full flex flex-row items-center justiify-between gap-2`}>
+                    <div className={`w-full flex flex-row justify-start overflow-x-scroll scrollbar-none gap-4 mb-4`}>
+                        <div
+                            onClick={() => {
+                                setProductType("new")
+                                setNameProduct("")
+                                setImgsProduct([
+                                    "https://tse2.mm.bing.net/th?id=OIP.sWCvltMZF_s3mjA5sL-RdgHaE8&pid=Api&P=0&h=180"
+                                ])
+                                setTypesProduct([
+                                    "",
+                                ])
+                                setColorsProduct([
+                                    ['#000000'],
+                                ])
+                                setPricesProduct([
+                                    "",
+                                ])
+                            }}
+                            className={`bg-my-primary rounded-[8px] opacity-[0.7] min-w-[200px] flex items-center justify-center`}
+                        >
+                            <IoMdAdd
+                                className={`text-[48px] font-bold text-[#efefef]`}
+                            />
+                        </div>
+
+                        {products != undefined && products.length >= 1 && products.map((product:any, i:number) => ( 
+                            <div
+                                key={i}
+                                className={`
+                                    bg-[#efefef] p-3 rounded-[8px] flex flex-col items-center justify-between min-w-[200px] border-[2px] 
+                                    ${nameProduct === product.name ? 'border-my-secondary' : 'border-transparent'}
+                                `}
+                                onClick={() => getProduct(product.name)}
+                            >
+                                <div className={`flex-grow-[1] flex items-center justify-center`}>
+                                    <img src={product.img[0]} alt="" className={`min-w-[100px]`} />
+                                </div>
+                                
+                                <div>
+                                    <p className={`text-center text-my-secondary font-bold mt-2 text-[24px]`}>{product.name}</p>
+                                    <p
+                                        className={`text-center text-my-primary font-bold `}
+                                    >R$ <span className={`text-[24px]`}>
+                                            {product.prices[0].split('.')[0] <= 9 ? `0${product.prices[0].replace('.', ',')}` : `${product.prices[0].replace('.', ',')}`}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className={`w-full flex flex-row items-center mt-4 justiify-between gap-2`}>
                         <input
                             placeholder={`Nome: `}
                             className={`flex-grow-[1] border-[1px] py-1 px-2 text-[14px] rounded-[8px]`}
@@ -520,7 +638,7 @@ export default function Administer() {
                         />
                     </div>
 
-                    {typesProduct.map((type, i) => (
+                    {typesProduct.length >= 1 && typesProduct.map((type, i) => (
                         <div
                             key={i}
                             className={`relative w-full border-[1px] rounded-[6px] overflow-hidden my-2 flex flex-row flex-wrap items-start justify-start`}
@@ -534,7 +652,7 @@ export default function Administer() {
                             
                             <label
                                 htmlFor={`estampaProduct-${i}`}
-                                className={`bg-my-white p-3 rounded-[8px] flex items-center flex-col relative cursor-pointer`}
+                                className={`w-full bg-[#efefef] p-3 rounded-[8px] flex items-center flex-col relative cursor-pointer`}
                             >
                                 <img src={imgsProduct[i]} className={`w-full max-w-[300px] mx-auto`} />
                             </label>
@@ -602,9 +720,13 @@ export default function Administer() {
                         onClick={() => {
                             handleUploadProducts()
                         }}
-                        className={`w-full bg-my-primary py-4 rounded-[6px] flex items-center justify-center text-center mx-auto mb-2 mt-4 font-bold text-my-white`}
+                        className={`w-full py-4 rounded-[6px] flex items-center justify-center text-center mx-auto mb-2 mt-4 font-bold text-my-white
+                            ${productType == "new" && "bg-my-primary"}
+                            ${productType == "update" && "bg-my-secondary"}
+                        `}
                     >
-                        Adicionar produto
+                        {productType == "new" && "Adicionar produto"}
+                        {productType == "update" && "Atualizar produto"}
                     </div>
                 </div>
             )}

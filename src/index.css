@@ -2,6 +2,7 @@
 
 * {
   font-family: 'Inter', cursive;
+  caret-color: transparent;
 }
 
 #root {
@@ -14,6 +15,9 @@ body {
   overflow-x: hidden
 }
 
+input {
+  caret-color: auto;
+}
 
 @media (min-width: 640px) {
   ::-webkit-scrollbar-thumb {
@@ -25,7 +29,6 @@ body {
     width: 10px;
   }
 }
-
 
 @import "tailwindcss";
 

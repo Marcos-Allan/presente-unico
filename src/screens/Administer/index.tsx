@@ -349,6 +349,7 @@ export default function Administer() {
         .then(function (response) {
             console.log(response.data)
             toast.success("Item adicionado com sucesso")
+            getProducts()
         })
         .catch(function (error) {
             console.log(error)
@@ -432,6 +433,34 @@ export default function Administer() {
             setImgsProduct(response.data.img)
             toast.success("Item atualizado com sucesso")
             getProducts()
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+    }
+
+    //FUNÇÃO RESPONSÁVEL POR DELETAR O PRODUTO DO BANCO DE DADOS
+    function deleteProduct(id:any) {
+        axios.delete(`https://back-tcc-murilo.onrender.com/delete-product/${id}`)
+        .then(function (response) {
+            console.log(response.data)
+            toast.success(response.data)
+            getProducts()
+            
+            setProductType("new")
+            setNameProduct("")
+            setImgsProduct([
+                "https://tse2.mm.bing.net/th?id=OIP.sWCvltMZF_s3mjA5sL-RdgHaE8&pid=Api&P=0&h=180"
+            ])
+            setTypesProduct([
+                "",
+            ])
+            setColorsProduct([
+                ['#000000'],
+            ])
+            setPricesProduct([
+                "",
+            ])
         })
         .catch(function (error) {
             console.log(error)
@@ -607,11 +636,18 @@ export default function Administer() {
                             <div
                                 key={i}
                                 className={`
-                                    bg-[#efefef] p-3 rounded-[8px] flex flex-col items-center justify-between min-w-[200px] border-[2px] 
+                                    bg-[#efefef] p-3 rounded-[8px] flex flex-col items-center justify-between min-w-[200px] border-[2px] relative
                                     ${nameProduct === product.name ? 'border-my-secondary' : 'border-transparent'}
                                 `}
                                 onClick={() => getProduct(product.name)}
                             >
+                                <div
+                                    onClick={() => deleteProduct(product._id)}
+                                    className={`absolute top-0 right-0 bg-my-red text-my-white p-3 rounded-bl-[4px] z-[2]`}
+                                >
+                                    <FaTrashAlt />
+                                </div>
+                                
                                 <div className={`flex-grow-[1] flex items-center justify-center`}>
                                     <img src={product.img[0]} alt="" className={`min-w-[100px]`} />
                                 </div>

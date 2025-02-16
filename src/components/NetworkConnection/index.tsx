@@ -1,19 +1,38 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
-import { useNetworkStatus } from "use-network-status";
+import { useEffect, useState } from "react";
 
 export default function NetworkStatus({ children }: { children: React.ReactNode }) {
-    const { online }: any = useNetworkStatus();
-    const isLocalhost = window.location.hostname.includes("localhost")
+    const [online, setOnline] = useState(true);
+
+    useEffect(() => {
+        const checkOnlineStatus = async () => {
+            try {
+                await fetch("https://www.google.com", { mode: "no-cors" });
+                setOnline(true);
+            } catch (error) {
+                setOnline(false);
+            }
+        };
     
-    console.log(isLocalhost)
+        const interval = setInterval(checkOnlineStatus, 3000); // Checa a cada 3s
 
-  if (!online && isLocalhost == false) {
-    return (
-        <div className={`w-screen h-screen flex items-center justify-center text-my-secondary text-[48px] font-bold uppercase`}>
-            Offline
-        </div>
-    )
-  }
+        window.addEventListener("online", () => setOnline(true));
+        window.addEventListener("offline", () => setOnline(false));
+    
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener("online", () => setOnline(true));
+            window.removeEventListener("offline", () => setOnline(false));
+        };
+    }, []);
 
-  return <>{children}</>;
+    if (!online) {
+        return (
+            <div className="w-screen h-screen flex items-center justify-center text-my-secondary text-[48px] font-bold uppercase">
+                Offline
+            </div>
+        );
+    }
+
+    return <>{children}</>;
 }

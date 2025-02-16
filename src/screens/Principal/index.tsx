@@ -77,11 +77,11 @@ export default function Principal() {
             
             <div className={`w-[80%] flex items-center justify-center text-my-secondary font-bold font-inter max-w-[900px]`}>
                 <div className="hidden sm:block flex-grow-[1] bg-my-secondary h-[3px]"></div>
-                <p className="mr-2 sm:ml-2 text-[22px]">Produtos</p>
+                <p className="mr-2 sm:ml-2 text-[26px]">Produtos</p>
                 <div className="flex-grow-[1] bg-my-secondary h-[3px]"></div>
             </div>
 
-            <div className="flex items-start justify-center flex-wrap py-4 w-[100%] relative max-w-[900px]">
+            <div className="flex items-start justify-center flex-wrap pt-4 pb-12 w-[100%] relative max-w-[900px]">
                 {products != undefined && products.length >= 1 && products.map((product:any, i:number) => (
                     <ProductCard
                         key={i}

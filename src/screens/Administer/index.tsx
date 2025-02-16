@@ -519,6 +519,8 @@ export default function Administer() {
             {typeScreen == 'adm-estampas' && (
                 <div className={`bg-my-white w-[80%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
                     
+                    <h2 className={`text-my-secondary mb-2 font-bold text-[24px] w-full capitalize`}>Estampas salvas</h2>
+
                     <div className={`w-full overflow-scroll flex items-center justify-start scrollbar-none mb-3 gap-1`}>
                         {arrayEstampas.map((img, i) => (
                             <div
@@ -551,7 +553,7 @@ export default function Administer() {
 
                     <label
                         htmlFor="estampa"
-                        className={`bg-[#efefef] w-full flex items-center mb-3 flex-col transition-all duration-[.3s] border-transparent justify-between mr-2 p-1 rounded-[8px] border-[1px] cursor-pointer hover:bg-transparent hover:border-my-secondary py-4`}
+                        className={`mt-0 bg-[#efefef] w-full flex items-center mb-3 flex-col transition-all duration-[.3s] border-transparent justify-between mr-2 p-1 rounded-[8px] border-[1px] cursor-pointer hover:bg-transparent hover:border-my-secondary py-4`}
                     >
                         <p className={`text-[18px] font-bold text-my-secondary text-center`}>Adicione mais estampas</p>
                         <AiFillPicture className={`mt-2 text-my-secondary text-[48px]`}/>
@@ -559,7 +561,7 @@ export default function Administer() {
 
                     <input multiple={true} ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
 
-                    <div className={`w-full flex items-center justify-center flex-wrap gap-1`}>
+                    <div className={`w-full flex items-center justify-center flex-wrap gap-1 ${btnActive == false && 'mb-1'}`}>
                         {imgURLs.map((url:string, index:number) => (
                             <div
                                 key={index}
@@ -583,24 +585,23 @@ export default function Administer() {
                         ))}
                     </div>
 
-                    <button
-                        onClick={() => {
-                            //COLOCA O MODAL
-                            notifySucess(`Estampas salvas com sucesso!!`)
-                            
-                            //CHAMA A FUNÇÃO QUE DA UPLOAD NAS IMAGENS
-                            handleUpload()
-                        }}
-                        className={`
-                            mt-3 text-white py-4 rounded-[8px] w-full mb-10 text-[20px] font-bold max-w-[900px] border-[1px] focus:outline-none focus:bg-transparent hover:bg-transparent transition-all duration-[.3s] cursor-pointer
-                            ${btnActive == true
-                                ? 'bg-my-primary focus:text-my-primary hover:text-my-primary border-my-primary'
-                                : 'bg-[#efefef] focus:text-[#efefef] hover:text-[#efefef] border-[#efefef]'
-                            }
-                        `}
-                    >
-                        Adicionar estampas
-                    </button>
+                    {btnActive == true && (
+                        <button
+                            onClick={() => {
+                                //COLOCA O MODAL
+                                notifySucess(`Estampas salvas com sucesso!!`)
+                                
+                                //CHAMA A FUNÇÃO QUE DA UPLOAD NAS IMAGENS
+                                handleUpload()
+                            }}
+                            className={`
+                                mt-3 text-white py-4 rounded-[8px] w-full mb-10 text-[20px] font-bold max-w-[900px] border-[1px] focus:outline-none focus:bg-transparent hover:bg-transparent transition-all duration-[.3s] cursor-pointer
+                                bg-my-primary focus:text-my-primary hover:text-my-primary border-my-primary
+                            `}
+                        >
+                            Adicionar estampas
+                        </button>
+                    )}
                 </div>
             )}
 

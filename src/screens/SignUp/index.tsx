@@ -227,7 +227,7 @@ export default function SignUp() {
     return(
         <div className={`overflow-x-hidden`}>
             <Header />
-            <div className={`w-screen min-h-screen bg-my-white overflow-x-hidden px-10 sm:px-0 flex flex-col items-center`}>
+            <div className={`w-screen min-h-[35vh] bg-my-white overflow-x-hidden px-10 sm:px-0 flex flex-col items-center`}>
                 <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Crie sua conta</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>Vamos criar sua conta</p>
 
@@ -272,16 +272,16 @@ export default function SignUp() {
 
                 <GoogleLogin />
 
-                <p className={`text-center max-w-[700px] mb-5 mt-20 font-bold text-my-secondary text-[18px]`}>
+                <p className={`text-center max-w-[700px] mb-5 mt-12 font-bold text-my-secondary text-[17px]`}>
                     Já tem uma conta?
-                    <Link to={'/sign-in'} className={`ml-2 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
+                    <Link to={'/sign-in'} className={`ml-1 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Entre
                     </Link>
                 </p>
                 
-                <p className={`text-center max-w-[700px] mb-20 font-bold text-my-secondary text-[18px]`}>
+                <p className={`text-center max-w-[700px] mb-12 font-bold text-my-secondary text-[17px]`}>
                     Esqueceu sua senha?
-                    <Link to={'/forgout-password'} className={`ml-2 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
+                    <Link to={'/forgout-password'} className={`ml-1 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Recupere
                     </Link>
                 </p>

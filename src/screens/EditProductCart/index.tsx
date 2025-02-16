@@ -459,7 +459,7 @@ export default function EditProductCart() {
                     
                     <label
                         htmlFor="estampa"
-                        className={`${productSelectedEdit.name !== 'Camiseta' ? 'w-[100%]' : 'w-[47%]'} bg-my-white p-3 rounded-[8px] flex items-center flex-col relative cursor-pointer`}
+                        className={`w-[100%] bg-my-white p-3 rounded-[8px] flex items-center flex-col relative cursor-pointer`}
                         onMouseEnter={() => toggleHover(true)}
                         onMouseLeave={() => toggleHover(false)}
                     >
@@ -476,20 +476,21 @@ export default function EditProductCart() {
 
                     <input ref={inputFileRef} type="file" name="estampa" id="estampa" className={`hidden`} onChange={handleFileIMG} />
 
-                    {productSelectedEdit.name == 'Camiseta' && (
-                        <div
-                            className={`w-[47%] bg-[#efefef] p-3 items-center justify-center rounded-[8px] flex flex-col max-w-[700px] relative`}
-                        >
-                            <p className={`absolute top-0 capitalize font-bold text-my-secondary text-center mb-1`}>tamanho</p>
-                            <p
-                                onClick={() => {
-                                    handleSize()
-                                }}
-                                className={`text-center text-my-secondary text-[34px] uppercase font-bold`}
-                            >{mySize}</p>
-                        </div>
-                    )}
                 </div>
+
+                {productSelectedEdit.name == 'Camiseta' && (
+                    <div
+                        className={`w-[80%] flex flex-row bg-[#efefef] p-3 rounded-[6px] mt-3 items-center justify-between font-bold capitalize max-w-[700px]`}
+                    >
+                        <p className={`text-my-secondary font-bold capitalize text-[20px]`}>Tamanho</p>
+                        <button
+                            onClick={() => {
+                                handleSize()
+                            }}
+                            className='text-my-primary text-[18px] bg-my-white py-2 w-[130px] rounded-[6px] text-center uppercase cursor-pointer'
+                        >{mySize}</button>
+                    </div>
+                )}
 
                 <div
                     className={`w-[80%] flex flex-row bg-[#efefef] p-3 rounded-[6px] mt-3 items-center justify-between font-bold capitalize max-w-[700px]`}

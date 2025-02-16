@@ -13,11 +13,11 @@ export default function Home() {
         <div className={`overflow-x-hidden`}>
             <div    
                 className={`
-                    w-screen h-[100dvh] overflow-x-hidden px-10 sm:px-0 flex flex-col items-center
+                    w-screen h-[100dvh] overflow-x-hidden sm:px-0 flex flex-col items-center
                 `}
             >
-                <img src={img} className={`max-w-[260px]`} alt="" />
-                <div className={`flex-grow-[1]`}>
+                <img src={img} className={`max-w-[280px]`} alt="" />
+                <div className={`flex-grow-[1] w-[80%]`}>
                     <p className={`text-my-black text-[30px] text-center mb-8`}>
                         Bem vindo a nossa loja de presentes personalizados
                     </p>
@@ -25,7 +25,7 @@ export default function Home() {
                         Aqui você consegue modificar o modelo e a estampa de seu produto.
                     </p>
                 </div>
-                <div className={`w-[400px] pb-3`}>
+                <div className={`w-[85%] pb-3`}>
                     <Button text={'Continuar'} validate={true} event={() => navigate('/sign-in')} />
                 </div>
             </div>

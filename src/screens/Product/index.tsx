@@ -212,7 +212,7 @@ export default function Product() {
                             setProductID(i);
                             console.log(products.colors[i])
                         }}
-                        className={`w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center  rounded-[4px] cursor-pointer transition-all duration-[.3s] border-[2px] border-[#efefef] hover:border-my-secondary ${productID == i && 'border-my-secondary'}`}
+                        className={`overflow-hidden w-auto mx-2 bg-[#efefef] min-w-[120px] text-[12px] capitalize flex flex-col items-center justify-center rounded-[6px] cursor-pointer transition-all duration-[.3s] border-[2px] border-[#efefef] hover:border-my-secondary ${productID == i && 'border-my-secondary'}`}
                     >
                         <div className={`flex-grow-[1] flex items-center justify-center`}>
                             <img
@@ -220,7 +220,7 @@ export default function Product() {
                                 className="w-[120px] p-1"
                             />
                         </div>
-                        <p className="mt-1 w-full text-center pb-5 font-bold text-my-secondary">{products.type[i]}</p>
+                        <p className="mt-1 w-full text-center py-[10px] font-bold text-my-white flex items-center justify-center bg-my-secondary">{products.type[i]}</p>
                     </div>
                 ))}
             </div>
@@ -322,7 +322,7 @@ export default function Product() {
                         material: products.type[productID],
                     })
                 }}
-                className={`mt-6 mb-2 text-my-white bg-my-primary w-[70%] rounded-[16px] py-4 text-[20px] font-inter font-bold max-w-[900px] transition-all duration-[.3s] border-[1px] border-my-primary hover:text-my-primary hover:bg-transparent cursor-pointer`}
+                className={`mt-1 mb-2 text-my-white bg-my-primary w-[80%] rounded-[8px] py-4 text-[20px] font-inter font-bold max-w-[900px] transition-all duration-[.3s] border-[1px] border-my-primary hover:text-my-primary hover:bg-transparent cursor-pointer`}
             >
                 Personalize seu produto!
             </button>

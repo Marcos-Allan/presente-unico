@@ -30,29 +30,32 @@ import Administer from './screens/Administer';
 
 //IMPORTAÇÃP DO PROVEDOR DE ESTADOS GLOBAIS
 import { GlobalProvider } from './provider/provider';
+import NetworkStatus from './components/NetworkConnection';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <GlobalProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="*" element={<>Erro</>} />
-          <Route path="/" element={<Home />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/forgout-password" element={<ForgoutPassword />} />
-          <Route path="/verify-code" element={<VerifyCode />} />
-          <Route path="/switch-password" element={<SwitchPassword />} />
-          
-          <Route path="/principal" element={<Principal />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/product/:product" element={<Product />} />
-          <Route path="/custom/:product" element={<CustomProduct />} />
-          <Route path="/cart/edit/:product" element={<EditProductCart />} />
-          <Route path="/admin" element={<Administer />} />
-          <Route path="/visualization" element={<Visualization />} />
-          <Route path="/model" element={<Model3D />} />
-        </Routes>
+        <BrowserRouter>
+          <NetworkStatus children={
+            <Routes>
+              <Route path="*" element={<>Erro</>} />
+              <Route path="/" element={<Home />} />
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/forgout-password" element={<ForgoutPassword />} />
+              <Route path="/verify-code" element={<VerifyCode />} />
+              <Route path="/switch-password" element={<SwitchPassword />} />
+              
+              <Route path="/principal" element={<Principal />} />
+              <Route path="/perfil" element={<Perfil />} />
+              <Route path="/product/:product" element={<Product />} />
+              <Route path="/custom/:product" element={<CustomProduct />} />
+              <Route path="/cart/edit/:product" element={<EditProductCart />} />
+              <Route path="/admin" element={<Administer />} />
+              <Route path="/visualization" element={<Visualization />} />
+              <Route path="/model" element={<Model3D />} />
+            </Routes>
+          } />
       </BrowserRouter>
       <ToastContainer />
     </GlobalProvider>

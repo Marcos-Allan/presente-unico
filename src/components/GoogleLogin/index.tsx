@@ -88,13 +88,13 @@ export default function GoogleLogin() {
             onMouseEnter={toggleFocus}
             onFocus={toggleFocus}
             onClick={() => handleGoogleLogin()}
-            className={`w-full max-w-[700px] border-[1px] border-my-gray py-3 rounded-[12px] flex items-center justify-center mt-8 cursor-pointer focus:outline-none focus:border-my-secondary hover:border-my-secondary focus:text-my-secondary hover:text-my-secondary`}
+            className={`w-full max-w-[700px] border-[1px] border-my-gray py-4 rounded-[12px] flex items-center justify-center mt-8 cursor-pointer focus:outline-none focus:border-my-secondary hover:border-my-secondary focus:text-my-secondary hover:text-my-secondary`}
         >
             <img
                 src={image}
-                className={`w-[36px] transition-all duration-[500ms] ${isFocus == true && 'rotate-360'}`}
+                className={`w-[40px] transition-all duration-[500ms] ${isFocus == true && 'rotate-360'}`}
             />
-            <p className="font-inter font-bold ml-2 text-[18px]">Fazer login com o google</p>
+            <p className="font-inter font-bold ml-3 text-[18px]">Fazer login com o google</p>
         </button>
     )
 }

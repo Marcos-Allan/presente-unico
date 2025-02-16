@@ -153,16 +153,16 @@ export default function ForgoutPassword() {
                     <Button text={'Enviar'} validate={btnValid} event={() => forgoutPassword()} />
                 </form>
 
-                <p className={`text-center max-w-[700px] mb-5 mt-20 font-bold text-my-secondary text-[18px]`}>
+                <p className={`text-center max-w-[700px] mb-5 mt-12 font-bold text-my-secondary text-[17px]`}>
                     Já tem uma conta?
-                    <NavLink to={'/sign-in'} className={`ml-2 underline text-my-primary  focus:outline-none hover:text-my-black focus:text-my-black`}>
+                    <NavLink to={'/sign-in'} className={`ml-1 underline text-my-primary  focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Entre
                     </NavLink>
                 </p>
 
-                <p className={`text-center max-w-[700px] font-bold text-my-secondary text-[18px] mb-10`}>
+                <p className={`text-center max-w-[700px] font-bold text-my-secondary text-[17px] mb-12`}>
                     Não tem uma conta ainda?
-                    <NavLink to={'/sign-up'} className={`ml-2 underline text-my-primary  focus:outline-none hover:text-my-black focus:text-my-black`}>
+                    <NavLink to={'/sign-up'} className={`ml-1 underline text-my-primary  focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Cadastre-se
                     </NavLink>
                 </p>

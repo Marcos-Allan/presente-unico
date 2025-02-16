@@ -340,11 +340,13 @@ export default function CustomProduct() {
                         onMouseLeave={() => toggleHoverMyPrint(false)}
                         onClick={() => setPrint('my')}
                         htmlFor="estampa"
-                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] border-[1px] cursor-pointer ${print == 'my' ? 'border-my-primary' : 'border-transparent'}`}
+                        className={`w-[47.5%] flex items-center flex-col justify-between mr-2 p-1 rounded-[8px] cursor-pointer transition-[background-color] duration-[.8s]
+                            ${print == 'my' ? 'bg-my-secondary text-[#efefef]' : 'bg-[#efefef] text-my-secondary'}
+                        `}
                     >
-                        <p className={`text-[18px] font-bold text-my-secondary text-center`}>Escolha sua estampa</p>
+                        <p className={`text-[18px] font-bold text-center`}>Escolha sua estampa</p>
                         <AiFillPicture className={`
-                            mt-2 text-my-secondary text-[48px] transition-all duration-[.5s]
+                            mt-2 text-[48px] transition-all duration-[.5s]
                                 ${isHoverMyPrint == true ? `rotate-[360deg]` : `rotae[0deg]`}
                             `}/>
                     </label>
@@ -358,11 +360,13 @@ export default function CustomProduct() {
                             setImgURL(arrayEstampas[indPreEstampa])
                             setPrint('other')
                         }}
-                        className={`w-[47.5%] bg-[#efefef] flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] border-[1px] cursor-pointer ${print == 'other' ? 'border-my-primary' : 'border-transparent'}`}
+                        className={`w-[47.5%] flex items-center flex-col justify-between ml-2 p-1 rounded-[8px] cursor-pointer transition-[background-color] duration-[.8s]
+                            ${print == 'other' ? 'bg-my-secondary text-[#efefef]' : 'bg-[#efefef] text-my-secondary'}
+                        `}
                     >
-                        <p className={`text-[18px] font-bold text-my-secondary text-center`}>Estampa pré pronta</p>
+                        <p className={`text-[18px] font-bold text-center`}>Estampa pré pronta</p>
                         <AiFillFileImage className={`
-                                mt-2 text-my-secondary text-[48px] transition-all duration-[.5s]
+                                mt-2 text-[48px] transition-all duration-[.5s]
                                 ${isHoverPrint == true ? `rotate-[360deg]` : `rotae[0deg]`}
                             `}
                         />

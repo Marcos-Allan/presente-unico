@@ -181,8 +181,8 @@ export default function SignIn() {
     return(
         <div className={`overflow-x-hidden`}>
             <Header />
-            <div className={`w-screen min-h-screen bg-my-white overflow-x-hidden px-10 sm:px-0 flex flex-col items-center`}>
-                <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Faça login com sua conta</h1>
+            <div className={`w-screen min-h-[35vh] bg-my-white overflow-x-hidden px-10 sm:px-0 flex flex-col items-center`}>
+                <h1 className={`mt-5 text-left w-full max-w-[700px] text-[26px] text-my-secondary font-inter font-bold mb-2`}>Faça login com sua conta</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>È bom ter você novamente!</p>
                 
                 <form
@@ -214,16 +214,16 @@ export default function SignIn() {
 
                 <GoogleLogin />
 
-                <p className={`text-center max-w-[700px] mb-5 mt-20 font-bold text-my-secondary text-[18px]`}>
+                <p className={`text-center max-w-[700px] mb-5 mt-12 font-bold text-my-secondary text-[17px]`}>
                     Não tem uma conta ainda?
-                    <NavLink to={'/sign-up'} className={`ml-2 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
+                    <NavLink to={'/sign-up'} className={`ml-1 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Cadastre-se
                     </NavLink>
                 </p>
                 
-                <p className={`text-center max-w-[700px] mb-20 font-bold text-my-secondary text-[18px]`}>
+                <p className={`text-center max-w-[700px] mb-12 font-bold text-my-secondary text-[17px]`}>
                     Esqueceu sua senha?
-                    <NavLink to={'/forgout-password'} className={`ml-2 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
+                    <NavLink to={'/forgout-password'} className={`ml-1 underline text-my-primary focus:outline-none hover:text-my-black focus:text-my-black`}>
                         Recupere
                     </NavLink>
                 </p>

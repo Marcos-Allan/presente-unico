@@ -494,7 +494,7 @@ export default function Administer() {
             {typeScreen == undefined && (
                 <div className={`bg-my-white w-[80%] flex flex-col items-center justify-center rounded-[12px] max-w-[900px] mb-3 gap-4`}>
                     
-                    <h1 className={`text-my-secondary font-bold text-[18px] mt-4 mb-1 text-center`}>O quê vamos administrar hoje?</h1>
+                    <h1 className={`text-my-secondary font-bold text-[18px] mt-4 mb-1 text-center`}>O quê vamos administrar hoje em?</h1>
 
                     <div className={`w-full flex flex-row items-center justify-center gap-4`}>
                         <div

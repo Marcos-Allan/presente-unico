@@ -69,7 +69,7 @@ export default function Principal() {
 
     return(
         <div
-            className={`bg-my-white w-screen h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
+            className={`bg-my-white w-screen min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
         >
             <Header />
             

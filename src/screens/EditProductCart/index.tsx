@@ -441,7 +441,7 @@ export default function EditProductCart() {
 
     return(
         <div className={`overflow-x-hidden`}>
-            <div className={`bg-my-white w-screen min-h-screen flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}>
+            <div className={`bg-my-white w-screen min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}>
                 <Header />
                 <div className={`relative p-3 w-[80%] bg-[#efefef] flex items-center justify-center mt-4 rounded-[12px] max-w-[400px]`}>
                     <Link

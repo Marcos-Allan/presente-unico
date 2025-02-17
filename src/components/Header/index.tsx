@@ -20,7 +20,7 @@ export default function Header() {
     const location = useLocation();
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { openCart, setOpenCart, openPerfil, setOpenPerfil, user, setCartPosition }:any = useContext(GlobalContext);
+    const { cart, openCart, setOpenCart, openPerfil, setOpenPerfil, user, setCartPosition }:any = useContext(GlobalContext);
 
     useEffect(() => {
         const updateCartPosition = () => {
@@ -74,19 +74,31 @@ export default function Header() {
 
             {(location.pathname !== '/sign-in') && (location.pathname !== '/sign-up') && (location.pathname !== '/forgout-password') && (location.pathname !== '/verify-code') && (location.pathname !== '/switch-password') &&  (
                 <div className={`flex items-center gap-2 text-[28px] text-my-secondary`}>
-                    <FaUser
-                        className={`hover:scale-[1.3] transition-all duration-[.3s] cursor-pointer`}
+                    <div
                         onClick={() => {
                             setOpenPerfil(!openPerfil)
                         }}
-                    />
-                    <FaCartPlus
-                        id="cart-icon"
-                        className={`hover:scale-[1.3] transition-all duration-[.3s] cursor-pointer`}
+                    >
+                        <FaUser
+                            className={`hover:scale-[1.3] transition-all duration-[.3s] cursor-pointer`}
+                        />
+                    </div>
+                    <div
+                        className='relative'
                         onClick={() => {
                             setOpenCart(!openCart)
                         }}
-                    />
+                    >
+                        <FaCartPlus
+                            id="cart-icon"
+                            className={`hover:scale-[1.3] transition-all duration-[.3s] cursor-pointer`}
+                        />
+                        {cart != undefined && cart.length >= 1 && (
+                            <div className={`absolute top-[-9px] right-[-9px] w-[18px] h-[18px] bg-my-primary rounded-[50%] flex items-center justify-center text-[10px] text-my-white`}>
+                                {cart.length}
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

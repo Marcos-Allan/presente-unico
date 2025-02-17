@@ -17,6 +17,7 @@
     "@types/three": "^0.173.0",
     "axios": "^1.7.9",
     "firebase": "^11.2.0",
+    "framer-motion": "^12.4.3",
     "icons": "^1.0.0",
     "leva": "^0.10.0",
     "openmobile": "^1.2.3",

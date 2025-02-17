@@ -19,7 +19,7 @@ export default function ModalUser() {
         <>
             {openPerfil == true && (
                 <div
-                    className={`w-screen h-screen fixed top-0 left-0 bg-[#00000085]`}
+                    className={`w-screen h-screen fixed top-0 left-0 bg-[#00000085] z-[999]`}
                     onClick={() => {
                         //MUDA O MODAL PARA FECHADO
                         setOpenPerfil(false)

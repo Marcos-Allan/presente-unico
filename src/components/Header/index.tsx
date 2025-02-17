@@ -1,5 +1,5 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router';
 
 //IMPORTAÇÃO DAS IMAGENS
@@ -20,13 +20,35 @@ export default function Header() {
     const location = useLocation();
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { openCart, setOpenCart, openPerfil, setOpenPerfil, user }:any = useContext(GlobalContext);
+    const { openCart, setOpenCart, openPerfil, setOpenPerfil, user, setCartPosition }:any = useContext(GlobalContext);
+
+    useEffect(() => {
+        const updateCartPosition = () => {
+          const cart = document.getElementById("cart-icon");
+    
+          if (cart) {
+            const cartRect = cart.getBoundingClientRect();
+            setCartPosition({
+              x: cartRect.left + window.scrollX + cartRect.width / 2,
+              y: cartRect.top + window.scrollY + cartRect.height / 2,
+            });
+          }
+        };
+    
+        updateCartPosition();
+        window.addEventListener("resize", updateCartPosition);
+        window.addEventListener("scroll", updateCartPosition);
+    
+        return () => {
+          window.removeEventListener("resize", updateCartPosition);
+          window.removeEventListener("scroll", updateCartPosition);
+        };
+      }, [setCartPosition]);
 
     return(
         <div
-            style={{ boxShadow: "0px 0px 1px 0px rgba(0, 0, 0, 0.5)" }}
             className={`
-                w-full bg-my-white flex items-center px-8 py-2 mb-2 sm:mb-5
+                fixed top-0 left-0 w-full bg-my-white flex items-center px-8 py-2 mb-2 sm:mb-5 z-[998]
                 ${(location.pathname !== '/sign-in') && (location.pathname !== '/sign-up') && (location.pathname !== '/forgout-password') && (location.pathname !== '/verify-code') && (location.pathname !== '/switch-password') ? 'justify-between' : 'justify-center'}
             `}
         >
@@ -59,6 +81,7 @@ export default function Header() {
                         }}
                     />
                     <FaCartPlus
+                        id="cart-icon"
                         className={`hover:scale-[1.3] transition-all duration-[.3s] cursor-pointer`}
                         onClick={() => {
                             setOpenCart(!openCart)

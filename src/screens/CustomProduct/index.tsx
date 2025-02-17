@@ -453,6 +453,7 @@ export default function CustomProduct() {
             >
                 Adicionar ao carrinho
             </button>
+
             <Footer />
             <ModalCart />
             <ModalUser />

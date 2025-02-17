@@ -13,7 +13,7 @@ export default function Home() {
         <div className={`overflow-x-hidden`}>
             <div    
                 className={`
-                    w-screen h-[100dvh] overflow-x-hidden sm:px-0 flex flex-col items-center
+                    w-full h-[100dvh] overflow-x-hidden sm:px-0 flex flex-col items-center justify-center
                 `}
             >
                 <img src={img} className={`max-w-[280px]`} alt="" />
@@ -25,7 +25,7 @@ export default function Home() {
                         Aqui você consegue modificar o modelo e a estampa de seu produto.
                     </p>
                 </div>
-                <div className={`w-[85%] pb-3`}>
+                <div className={`w-[85%] pb-3 flex flex-col items-center`}>
                     <Button text={'Continuar'} validate={true} event={() => navigate('/sign-in')} />
                 </div>
             </div>

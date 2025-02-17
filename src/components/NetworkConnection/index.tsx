@@ -28,7 +28,7 @@ export default function NetworkStatus({ children }: { children: React.ReactNode 
 
     if (!online) {
         return (
-            <div className="w-screen h-screen flex items-center justify-center text-my-secondary text-[48px] font-bold uppercase">
+            <div className="w-screen h-screen flex flex-col items-center justify-center text-my-secondary text-[48px] font-bold uppercase overflow-x-hidden">
                 Offline
             </div>
         );

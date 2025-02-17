@@ -39,6 +39,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [logoutModal, setLogoutModal] = useState<boolean>(false);
     const [finishBuy, setFinishBuy] = useState<boolean>(false);
+    const [cartPosition, setCartPosition] = useState<{ x: number; y: number } | null>(null);
 
     //FUNÇÃO RESPONSÁVEL POR ATUALIZAR OS ITENS DO PRODUTO SELECIONADO
     function toggleProduct(product:any) {
@@ -118,7 +119,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, toggleProduct, cart, setCart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit, updateItemsCart, finishBuy, toggleFinishBuy } as any}>
+        <GlobalContext.Provider value={{ user, setUser, openCart, setOpenCart, openPerfil, setOpenPerfil, productSelected, setProductSelected, toggleProduct, cart, setCart, addToCart, loading, toggleLoading, toggleUser, logoutModal, setLogoutModal, toggleLogoutUser, productSelectedEdit, setProductSelectedEdit, updateItemsCart, finishBuy, toggleFinishBuy, cartPosition, setCartPosition } as any}>
             {children}
         </GlobalContext.Provider>
     );

@@ -116,6 +116,7 @@ export default function Administer() {
     //FUNÇÃO RESPONSÁVEL POR REMOVER UMA COR DO ARRAY
     function removeColorProduct(i:number, i2:number) {
         if(colorsProduct[i].length == 1){
+            toast.dismiss();
             toast.error('Necessário ter ao menos cor')
             return
         }
@@ -175,6 +176,7 @@ export default function Administer() {
 
     const handleUpload = async () => {
         if (selectedFiles.length === 0) {
+            toast.dismiss();
             toast.error("Nenhuma imagem selecionada para upload.");
             return;
         }
@@ -214,6 +216,7 @@ export default function Administer() {
 
         } catch (error) {
             console.error("Erro ao fazer upload das imagens:", error);
+            toast.dismiss();
             toast.error("Erro ao fazer upload das imagens.");
         }
     };
@@ -282,6 +285,7 @@ export default function Administer() {
             }
         } catch (error) {
             console.error("Erro ao fazer upload das imagens:", error);
+            toast.dismiss();
             toast.error("Erro ao enviar imagens.");
         }
     };
@@ -348,6 +352,7 @@ export default function Administer() {
         })
         .then(function (response) {
             console.log(response.data)
+            toast.dismiss();
             toast.success("Item adicionado com sucesso")
             getProducts()
         })
@@ -412,6 +417,7 @@ export default function Administer() {
         .then(function (response) {
             console.log(response)
             fetchEstampas()
+            toast.dismiss();
             toast.success("Estampa removida com sucesso!")
         })
         .catch(function (error) {
@@ -431,6 +437,7 @@ export default function Administer() {
         .then(function (response) {
             console.log(response.data)
             setImgsProduct(response.data.img)
+            toast.dismiss();
             toast.success("Item atualizado com sucesso")
             getProducts()
         })
@@ -444,6 +451,7 @@ export default function Administer() {
         axios.delete(`https://back-tcc-murilo.onrender.com/delete-product/${id}`)
         .then(function (response) {
             console.log(response.data)
+            toast.dismiss();
             toast.success(response.data)
             getProducts()
             
@@ -471,9 +479,6 @@ export default function Administer() {
         fetchEstampas()
         getProducts()
     },[typeScreen, productType])
-
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
 
     return(
         <div className={`bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
@@ -588,8 +593,9 @@ export default function Administer() {
                     {btnActive == true && (
                         <button
                             onClick={() => {
+                                toast.dismiss();
                                 //COLOCA O MODAL
-                                notifySucess(`Estampas salvas com sucesso!!`)
+                                toast.success(`Estampas salvas com sucesso!!`)
                                 
                                 //CHAMA A FUNÇÃO QUE DA UPLOAD NAS IMAGENS
                                 handleUpload()

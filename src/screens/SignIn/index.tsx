@@ -35,10 +35,6 @@ export default function SignIn() {
 
     const [timeoutIdEmail, setTimeoutIdEmail] = useState<NodeJS.Timeout | null>(null);
     const [timeoutIdPassword, setTimeoutIdPassword] = useState<NodeJS.Timeout | null>(null);
-    
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-    const notifyError = (message:string) => toast.error(message);
 
     //FUNÇÃO RESPONÁVEL POR FAZER LOGIN
     function signIn() {
@@ -62,14 +58,16 @@ export default function SignIn() {
             //VERIFICA SE O TIPO RETORNADO DA REQUISIÇÃO É UM OBJETO
             if(typeof response.data === 'object'){
 
+                toast.dismiss();
                 //CHAMA O MODAL DE SUCESSO
-                notifySucess(`Bem vindo novamente ${response.data.name}`)
+                toast.success(`Bem vindo novamente ${response.data.name}`)
 
                 //NAVEGA PARA A PRÓXIMA PÁGINA
                 navigate('/principal')
             }else{
+                toast.dismiss();
                 //CHAMA O MODAL DE ERRO
-                notifyError(response.data)
+                toast.error(response.data)
             }
 
         })

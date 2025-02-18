@@ -33,10 +33,6 @@ export default function SiwtchPassword() {
     const [timeoutIdPassword, setTimeoutIdPassword] = useState<NodeJS.Timeout | null>(null);
     const [timeoutIdConfirmPassword, setTimeoutIdConfirmPassword] = useState<NodeJS.Timeout | null>(null);
 
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-    const notifyError = (message:string) => toast.error(message);
-
     //FUNÇÃO RESPONÁVEL POR FAZER LOGIN
     function updateUser() {
         //MUDA O ESTADO DA APLICAÇÃO PARA true
@@ -54,8 +50,9 @@ export default function SiwtchPassword() {
 
             //VERIFICA SE O TIPO RETORNADO DA REQUISIÇÃO É UM OBJETO
             if(typeof response.data === 'object'){
+                toast.dismiss();
                 //CHAMA O MODAL DE SUCESSO
-                notifySucess(`Senha alterada com sucesso!`)
+                toast.success(`Senha alterada com sucesso!`)
 
                 //COLOCA OS DADOS DO BACKEND DO USUÁRIO NO FRONTEND
                 toggleUser(response.data._id, response.data.name, response.data.email, response.data.historico_pedido, response.data.client_type, true)
@@ -63,8 +60,9 @@ export default function SiwtchPassword() {
                 //NAVEGA PARA A PRÓXIMA PÁGINA
                 navigate('/sign-in')
             }else{
+                toast.dismiss();
                 //CHAMA O MODAL DE ERRO
-                notifyError(response.data)
+                toast.error(response.data)
             }
         })
         .catch(function (error) {

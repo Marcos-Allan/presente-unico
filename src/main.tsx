@@ -57,7 +57,7 @@ createRoot(document.getElementById('root')!).render(
             </Routes>
           } />
       </BrowserRouter>
-      <ToastContainer />
+      <ToastContainer limit={1} />
     </GlobalProvider>
   </StrictMode>,
 )

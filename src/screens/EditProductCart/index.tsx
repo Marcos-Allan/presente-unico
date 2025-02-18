@@ -115,8 +115,9 @@ export default function EditProductCart() {
             //ATUALIZA O CARRINHO PARA 
             setCart(response.data.cart)
 
+            toast.dismiss();
             //COLOCA ALERT NA TELA
-            notifySucess('item deletado com sucesso')
+            toast.success('item deletado com sucesso')
 
             //SETA AS VARIÁVEIS DENTRO NO FRONTEND DA APLICAÇÃO
             toggleUser(user.id, user.name, user.email, user.history, response.data.cart, user.client_type, true)
@@ -310,8 +311,9 @@ export default function EditProductCart() {
                     //ATUALIZA O CARRINHO
                     setCart(response.data.cart)
 
+                    toast.dismiss();
                     //COLOCA ALERT NA TELA
-                    notifySucess('item atualizado com sucesso')
+                    toast.success('item atualizado com sucesso')
 
                     //SALVA O ITEM A EDITAR NO LOCALSTORAGE DO NAVEGADOR
                     localStorage.setItem('productPUE', JSON.stringify({
@@ -405,8 +407,9 @@ export default function EditProductCart() {
                             //ATUALIZA O CARRINHO
                             setCart(response.data.cart)
 
+                            toast.dismiss();
                             //COLOCA ALERT NA TELA
-                            notifySucess('item atualizado com sucesso')
+                            toast.success('item atualizado com sucesso')
                         })
                         .catch(function (error) {
                             console.log(error)
@@ -435,9 +438,6 @@ export default function EditProductCart() {
         //SETA A QUANTIDADE DE PRODUTO COM BASE NO QUE ELE DIGITA NO INPUT
         setMyQuantity(e.target.value)
     }
-
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
 
     return(
         <div className={`overflow-x-hidden`}>

@@ -38,8 +38,9 @@ export default function GoogleLogin() {
         .then(function (response) {
             
             if(typeof response.data === 'object'){
+                toast.dismiss();
                 //CHAMA O MODAL DE SUCESSO
-                notifySucess(`${response.data.message} ${response.data.person.name}`)
+                toast.success(`${response.data.message} ${response.data.person.name}`)
 
                 //COLOCA OS DADOS DO BACKEND DO USUÁRIO NO FRONTEND
                 toggleUser(response.data.person._id, response.data.person.name, response.data.person.email, response.data.person.historico_pedido, response.data.person.cart, response.data.person.client_type, true)
@@ -47,8 +48,9 @@ export default function GoogleLogin() {
                 //NAVEGA PARA A PRÓXIMA PÁGINA
                 navigate('/principal')
             }else{
+                toast.dismiss();
                 //CHAMA O MODAL DE ERRO
-                notifyError(response.data)
+                toast.error(response.data)
             }
         })
         .catch(function (error) {
@@ -56,10 +58,6 @@ export default function GoogleLogin() {
             console.log(error)
         })
     }
-
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-    const notifyError = (message:string) => toast.error(message);
 
     //FUNÇÃO REPOSNSÁVEL POR FAZER LOGIN COM O GOOGLE
     const handleGoogleLogin = async () => {

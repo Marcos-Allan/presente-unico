@@ -320,9 +320,6 @@ export default function CustomProduct() {
         setSize(choiceSize)
     }
 
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-
     return(
         <div className={`bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
         >
@@ -440,8 +437,9 @@ export default function CustomProduct() {
             </div>
             <button
                 onClick={() => {
+                    toast.dismiss();
                     //COLOCA O MODAL
-                    notifySucess(`Item adicionado ao carrinho`)
+                    toast.success(`Item adicionado ao carrinho`)
                     
                     handleUpload()
                 }}

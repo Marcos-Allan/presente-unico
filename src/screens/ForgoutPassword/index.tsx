@@ -30,10 +30,6 @@ export default function ForgoutPassword() {
     const [btnValid, setBtnValid] = useState<boolean>(false)
 
     const [timeoutIdEmail, setTimeoutIdEmail] = useState<NodeJS.Timeout | null>(null);
-    
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-    const notifyError = (message:string) => toast.error(message);
 
     //FUNÇÃO RESPONÁVEL POR FAZER LOGIN
     function forgoutPassword() {
@@ -46,14 +42,16 @@ export default function ForgoutPassword() {
             console.log(response.data)
             
             if(response.data == 'Usuário não cadastrado com esse email'){
+                toast.dismiss();
                 //CHAMA O MODAL DE ERRO
-                notifyError(response.data)
+                toast.error(response.data)
                 
                 // MUDA O ESTADO DA APLICAÇÃO PARA false
                 toggleLoading(false)
             }else{
+                toast.dismiss();
                 //CHAMA O MODAL DE SUCESSO
-                notifySucess(`Email enviado para ${email}`)
+                toast.success(`Email enviado para ${email}`)
 
                 //SETA OS DADOS DO USUÁRIO NO FRONTEND DA APLICAÇÃO
                 toggleUser(response.data.user._id, user.name, user.email, user.history, user.cart, user.client_type, user.logged )

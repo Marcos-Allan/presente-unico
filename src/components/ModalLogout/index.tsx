@@ -10,9 +10,6 @@ export default function ModalLogout() {
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { logoutModal, setLogoutModal, toggleLogoutUser }:any = useContext(GlobalContext);
 
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-
     return(
         <>
             {logoutModal == true && (
@@ -41,7 +38,8 @@ export default function ModalLogout() {
                                 className={`flex-grow-[1] flex items-center justify-center text-my-white bg-my-primary uppercase py-2 px-3 rounded-br-[6px]`}
                                 onClick={() => {
                                     toggleLogoutUser()
-                                    notifySucess('Conta deslogada com sucesso')
+                                    toast.dismiss();
+                                    toast.success('Conta deslogada com sucesso')
                                     setLogoutModal(false)
                                 }}
                             >logout</button>

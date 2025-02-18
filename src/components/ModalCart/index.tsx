@@ -1,6 +1,11 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
 import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import axios from 'axios'
+import { toast } from 'react-toastify';
+
+//IMPORTAÇÃO DOS COMPONENTES
+import CartCardProduct from '../CartCardProduct';
 
 //IMPORTAÇÃO DOS ICONES
 import { FaCartPlus } from "react-icons/fa"
@@ -8,22 +13,45 @@ import { FaCartPlus } from "react-icons/fa"
 //IMPORTAÇÃO DO PROVEDOR DOS ESTADOS GLOBAIS
 import { GlobalContext } from "../../provider/context";
 
-//IMPORTAÇÃO DOS ICONES
-import { CiEdit } from 'react-icons/ci';
 
 export default function ModalCart() {
     //UTILIZAÇÃO DO HOOK DE NAVEGAÇÃO DO react-router-dom
     const navigate = useNavigate()
 
-    //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
-    const { openCart, setOpenCart, cart, setProductSelectedEdit, toggleFinishBuy }:any = useContext(GlobalContext);
+    //IMPORTAÇÃO DAS VARIÁVEIS DE ESTADO GLOBAL
+    const { openCart, setOpenCart, cart, setProductSelectedEdit, toggleFinishBuy, user, setCart, toggleUser }: any = useContext(GlobalContext);
+
+    //FUNÇÃO RESPONSÁVEL POR REMOVER ITEM DO CARRINHO
+    function removeItem(itemId: any) {
+        axios.delete('https://back-tcc-murilo.onrender.com/remove-carrinho', {
+            data: {
+                userId: user.id,
+                itemId: itemId,
+            }
+        })
+        .then(function (response) {
+            //ATUALIZA O CARRINHO PARA 
+            setCart(response.data.cart)
+
+            toast.dismiss();
+            //COLOCA ALERT NA TELA
+            toast.success('Item removido do carrinho')
+
+            //SETA AS VARIÁVEIS DENTRO NO FRONTEND DA APLICAÇÃO
+            toggleUser(user.id, user.name, user.email, user.history, response.data.cart, user.client_type, true)
+        })
+        .catch(function (error) {
+            //ESCREVE O ERRO OCORRIDO NO CONSOLE
+            console.log(error)
+        })
+    }
 
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         console.log(cart)
-    },[cart])
+    }, [cart])
 
-    return(
+    return (
         <>
             {openCart == true && (
                 <div
@@ -48,59 +76,14 @@ export default function ModalCart() {
                         />
 
                         <div className={`w-full flex-grow-[1] min-h-[200px] overflow-y-scroll flex items-center justify-start flex-col overflow-x-hidden pt-[20px]`}>
-                            
-                            {cart != undefined && cart.length >= 1 && cart.map((item:any, i:number) => (
-                                <div key={i} className={`w-[85%] bg-[#efefef] h-[80px] rounded-[8px] flex flex-row items-center justify-between mb-4 relative px-3`}>
-                                    <div className={`absolute top-[-8px] left-[-8px] text-[12px] text-my-white bg-my-secondary rounded-[50%] w-[20px] text-center flex items-center justify-center h-[20px]`}>{item.quantity}</div>
-                                    
-                                    {item.estampa && (
-                                        <img src={item.estampa} alt="" className={`w-[70px]`} />
-                                    )}
-                                    
-                                    <div className={`flex-grow-[1] flex flex-row items-center justify-between`}>
-                                        <img src={item.image} alt="" className={`w-[80px] h-[80px]`} />
-                                        <div>
-                                            <p className={`font-bold text-my-secondary text-[14px]`}>{item.name}</p>
-                                            <p className={`font-bold text-my-primary text-[14px]`}>R${item.price} uni</p>
-                                        </div>
-                                        <div
-                                            onClick={() => {
-                                                //MUDA O ESTADO DE openCart
-                                                setOpenCart(false)
-
-                                                //SALVA O ITEM A EDITAR NO LOCALSTORAGE DO NAVEGADOR
-                                                localStorage.setItem('productPUE', JSON.stringify({
-                                                    id: item.id,
-                                                    image: item.image,
-                                                    name: item.name,
-                                                    print: item.estampa,
-                                                    size: item.size,
-                                                    material: item.material,
-                                                    quantity: item.quantity,
-                                                    price: item.price,})
-                                                )
-
-                                                //SALVA O ITEM A EDITAR NO FRONTEND DA APLICAÇÃO
-                                                setProductSelectedEdit({
-                                                    id: item.id,
-                                                    image: item.image,
-                                                    name: item.name,
-                                                    print: item.estampa,
-                                                    size: item.size,
-                                                    material: item.material,
-                                                    quantity: item.quantity,
-                                                    price: item.price,
-                                                })
-
-                                                //NAVEGA PARA A PÁGINA DE EDIÇÃO DO PRODUTO
-                                                navigate(`/cart/edit/${item.name}`)
-                                            }}
-                                            className={`bg-my-secondary w-8 h-8 flex items-center justify-center absolute top-[-20px] right-[-20px] rounded-[50%]`}
-                                        >
-                                            <CiEdit className={`text-[24px] text-my-white`} />
-                                        </div>
-                                    </div>
-                                </div>
+                            {cart != undefined && cart.length >= 1 && cart.map((item: any) => (
+                                <CartCardProduct
+                                    key={item.id}
+                                    item={item}
+                                    setProductSelectedEdit={setProductSelectedEdit}
+                                    removeItem={removeItem}
+                                    navigate={navigate}
+                                />
                             ))}
                         </div>
                         <div className={`w-full absolute bottom-0 flex items-center justify-center bg-my-white pt-3 pb-2`}>

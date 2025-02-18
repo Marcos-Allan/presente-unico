@@ -62,21 +62,19 @@ export default function ModalFinishBuy() {
             //LIMPA O ARRAY DE CARRINHO
             setCart([])
 
+            toast.dismiss();
             //COLOCA O ALERT DE SUCESSO NA TELA
-            notifySucess('compra finalizada com sucesso')
+            toast.success('compra finalizada com sucesso')
         })
         .catch(function (error) {
+            toast.dismiss();
             //COLOCA O ALERT DE SUCESSO NA TELA
-            notifyError('compra finalizada com sucesso')
+            toast.error('compra finalizada com sucesso')
 
             //ESCREVE NO CONSOLE O ERRO
             console.log(error)
         })
     }
-
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-    const notifyError = (message:string) => toast.error(message);
 
     return(
         <>

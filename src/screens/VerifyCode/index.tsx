@@ -29,10 +29,6 @@ export default function VerifyCode() {
     const [btnValid, setBtnValid] = useState<boolean>(false)
 
     const [timeoutIdCode, setTimeoutIdCode] = useState<NodeJS.Timeout | null>(null);
-    
-    //FUNÇÃO RESPONSÁVEL POR CHAMAR O MODAL
-    const notifySucess = (message:string) => toast.success(message);
-    const notifyError = (message:string) => toast.error(message);
 
     //FUNÇÃO RESPONÁVEL POR FAZER LOGIN
     function forgoutPassword() {
@@ -46,14 +42,16 @@ export default function VerifyCode() {
             
             //VERIFICA SE O TIPO RETORNADO DA REQUISIÇÃO É UMA STRING
             if(response.data == 'Código de verificação errado'){
+                toast.dismiss();
                 //CHAMA O MODAL DE ERRO
-                notifyError(response.data)
+                toast.error(response.data)
                 
                 // MUDA O ESTADO DA APLICAÇÃO PARA false
                 toggleLoading(false)
             }else{
+                toast.dismiss();
                 //CHAMA O MODAL DE SUCESSO
-                notifySucess(`Código correto`)
+                toast.success(`Código correto`)
                 
                 // MUDA O ESTADO DA APLICAÇÃO PARA false
                 toggleLoading(false)

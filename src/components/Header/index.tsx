@@ -84,7 +84,7 @@ export default function Header() {
                         />
                     </div>
                     <div
-                        className='relative'
+                        className='relative flex items-center justify-center w-[28px] h-[28px]'
                         onClick={() => {
                             setOpenCart(!openCart)
                         }}

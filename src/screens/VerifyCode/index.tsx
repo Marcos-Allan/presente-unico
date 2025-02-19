@@ -127,7 +127,7 @@ export default function VerifyCode() {
     return(
         <div className={`overflow-x-hidden`}>
             <Header />
-            <div className={`w-screen min-h-[35vh] bg-my-white overflow-x-hidden px-10 pb-10 sm:px-0 flex flex-col items-center`}>
+            <div className={`pt-[126px] w-screen min-h-[35vh] bg-my-white overflow-x-hidden px-10 pb-10 sm:px-0 flex flex-col items-center`}>
                 <h1 className={`mt-5 text-left w-full max-w-[700px] text-[28px] text-my-secondary font-inter font-bold mb-2`}>Confirme o código</h1>
                 <p className={`font-inter w-full text-left max-w-[700px] text-my-gray font-bold text-[16px] mb-6`}>Informe o código</p>
                 

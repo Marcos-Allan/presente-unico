@@ -13,7 +13,7 @@ export default function Home() {
         <div className={`overflow-x-hidden`}>
             <div    
                 className={`
-                    w-full min-h-[calc(100vh-126px)] overflow-x-hidden sm:px-0 flex flex-col items-center justify-center
+                    pt-[126px] w-full min-h-[calc(100vh-126px)] overflow-x-hidden sm:px-0 flex flex-col items-center justify-center
                 `}
             >
                 <img src={img} className={`max-w-[280px]`} alt="" />

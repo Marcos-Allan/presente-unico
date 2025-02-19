@@ -41,7 +41,7 @@ export default function EditProductCart() {
     const [myPrice, setMyPrice] = useState<any>(productSelectedEdit.price)
     
     //UTILIZAÇÃO DO HOOK useState
-    const [myEstampa, setMyEstampa] = useState<any>("")
+    const [myEstampa, setMyEstampa] = useState<any>(productSelectedEdit.estampa)
     const [myMaterial, setMyMaterial] = useState<any>(productSelectedEdit.material)
     const [myQuantity, setMyQuantity] = useState<any>(productSelectedEdit.quantity)
     const [mySize, setMySize] = useState<any>(productSelectedEdit.size)
@@ -65,6 +65,7 @@ export default function EditProductCart() {
     
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
+        console.log(productSelectedEdit.estampa)
         localStorage.setItem('estampa-visu3d', myEstampa)
     },[myEstampa])
 
@@ -201,7 +202,7 @@ export default function EditProductCart() {
     //FUNÇÃO CHAMADA TODA VEZ QUE A PÁGINA É RECARREGADA
     useEffect(() => {
         //MUDA AS PROPS DO PRODUTO
-        setMyEstampa(productSelectedEdit.print)
+        setMyEstampa(productSelectedEdit.estampa)
         setMyMaterial(productSelectedEdit.material)
         setMyQuantity(productSelectedEdit.quantity)
         setMySize(productSelectedEdit.size)
@@ -441,7 +442,7 @@ export default function EditProductCart() {
 
     return(
         <div className={`overflow-x-hidden`}>
-            <div className={`bg-my-white w-screen min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}>
+            <div className={`pt-[126px] bg-my-white w-screen min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}>
                 <Header />
                 <div className={`relative p-3 w-[80%] bg-[#efefef] flex items-center justify-center mt-4 rounded-[12px] max-w-[400px]`}>
                     <Link

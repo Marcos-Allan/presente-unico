@@ -2,6 +2,7 @@
 import { useContext, useState, useEffect, useRef } from 'react'
 import { toast } from 'react-toastify';
 import axios from 'axios'
+import { motion } from "framer-motion";
 import { useNavigate, useParams } from 'react-router'
 
 //IMPORTAÇÃO DOS COMPONENTES
@@ -92,6 +93,22 @@ export default function CustomProduct() {
     const [productID, setProductID] = useState<number>(0)
     const [img, setImg] = useState<string>('')
     const [imgURL, setImgURL] = useState<string | undefined>(undefined)
+    const [animateCard, setAnimateCard] = useState<boolean>(false)
+    const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
+
+    //FUNÇÃO RESPONSÁVEL POR PEGAR AS COORDENADAS DE ONDE O CLIENTE CLICAR
+    const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
+        const clientX = "clientX" in e ? e.clientX : e.touches[0].clientX;
+        const clientY = "clientY" in e ? e.clientY : e.touches[0].clientY;
+        
+        setPosition({ x: clientX, y: clientY });
+
+        setAnimateCard(true)
+
+        setTimeout(() => {
+            setAnimateCard(false)
+        }, 1000);
+    };
 
     //FUNÇÃO RESPONSÁEL POR PEGAR O INDICE DO PRODUTO
     function getIndice() {
@@ -321,7 +338,7 @@ export default function CustomProduct() {
     }
 
     return(
-        <div className={`bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
+        <div className={`pt-[126px] bg-my-white min-h-[35vh] flex flex-col items-center justify-start overflow-y-scroll overflow-x-hidden mx-auto sm:scrollbar sm:px-0`}
         >
             <Header />
             <div className={`bg-[#efefef] w-[95%] flex flex-col items-center justify-start rounded-[12px] max-w-[900px]`}>
@@ -436,12 +453,17 @@ export default function CustomProduct() {
                 )}
             </div>
             <button
-                onClick={() => {
-                    toast.dismiss();
-                    //COLOCA O MODAL
-                    toast.success(`Item adicionado ao carrinho`)
+                onClick={(e:any) => {
+                    handleClick(e)
                     
-                    handleUpload()
+                    setTimeout(() => {
+                        toast.dismiss();
+                        //COLOCA O MODAL
+                        toast.success(`Item adicionado ao carrinho`)
+                        
+                        handleUpload()
+                    }, 1100);
+
                 }}
                 className={`
                     ${btnActive == true ? 'bg-my-primary' : 'bg-[#efefef]'}
@@ -451,6 +473,19 @@ export default function CustomProduct() {
             >
                 Adicionar ao carrinho
             </button>
+            {position && animateCard == true && (
+                <motion.div
+                    initial={{ top: position.y, left: position.x }} // Posição inicial
+                    animate={{ top: -74, left: window.innerWidth - 143, scale: 0 }}  // Posição final
+                    transition={{ duration: 1 }}           // Duração da animação
+                    className={`flex flex-col items-center fixed w-[200px] z-[999] opacity-[0.5] min-h-[200px] rounded-[6px] overflow-hidden`}
+                >
+                    <div className={`flex-grow-[1] items-center justify-center bg-[#efefef]`}>
+                        <img src={productSelected.image} className={`w-full`} alt="" />
+                    </div>
+                    <p className={`text-my-white bg-my-secondary w-full text-center py-2`}>{productSelected.name}</p>
+              </motion.div>
+            )}
 
             <Footer />
             <ModalCart />

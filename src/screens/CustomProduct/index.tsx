@@ -455,14 +455,14 @@ export default function CustomProduct() {
             <button
                 onClick={(e:any) => {
                     handleClick(e)
+                    handleUpload()
                     
                     setTimeout(() => {
+                        
                         toast.dismiss();
                         //COLOCA O MODAL
                         toast.success(`Item adicionado ao carrinho`)
-                        
-                        handleUpload()
-                    }, 1100);
+                    }, 2000);
 
                 }}
                 className={`

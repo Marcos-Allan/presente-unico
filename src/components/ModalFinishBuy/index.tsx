@@ -80,7 +80,7 @@ export default function ModalFinishBuy() {
         <>
             {finishBuy == true && (
                 <div
-                    className={`w-screen h-screen fixed top-0 left-0 bg-[#00000085] flex items-center justify-center`}
+                    className={`w-screen h-screen fixed top-0 left-0 bg-[#00000085] flex items-center justify-center z-[999]`}
                     onClick={() => {
                         //MUDA O MODAL PARA FECHADO
                         toggleFinishBuy()

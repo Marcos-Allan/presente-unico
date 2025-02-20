@@ -1,5 +1,6 @@
 //IMPORTAÇÃO DAS BIBLIOTECAS
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { motion } from "framer-motion";
 import { useNavigate, useLocation } from 'react-router';
 
 //IMPORTAÇÃO DAS IMAGENS
@@ -21,6 +22,16 @@ export default function Header() {
 
     //IMPORTAÇÃO DAS VARIAVEIS DE ESTADO GLOBAL
     const { cart, openCart, setOpenCart, openPerfil, setOpenPerfil, user, setCartPosition }:any = useContext(GlobalContext);
+
+    const [animatePop, setAnimatePop] = useState<boolean>(false)
+
+    useEffect(() => {
+        console.log(animatePop)
+        if (cart.length > 0) {
+            setAnimatePop(true);
+            setTimeout(() => setAnimatePop(false), 500); // Reseta a animação após 300ms
+        }
+      }, [cart.length]);
 
     useEffect(() => {
         const updateCartPosition = () => {
@@ -93,11 +104,22 @@ export default function Header() {
                             id="cart-icon"
                             className={`hover:scale-[1.3] transition-all duration-[.3s] cursor-pointer`}
                         />
-                        {cart != undefined && cart.length >= 1 && (
+                        {openCart == false && cart.length >= 1 && (
+                            <motion.span
+                                key={cart.length}
+                                initial={{ scale: 0 }}
+                                animate={animatePop ? { scale: [1.4, 1] } : { scale: 1 }} // Aplica animação apenas quando necessário
+                                transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
+                                className={`absolute top-[-9px] right-[-9px] w-[18px] h-[18px] bg-my-primary rounded-[50%] flex items-center justify-center text-[10px] text-my-white`}
+                            >
+                                {cart.length}
+                            </motion.span>
+                        )}
+                        {/* {cart != undefined && cart.length >= 1 && (
                             <div className={`absolute top-[-9px] right-[-9px] w-[18px] h-[18px] bg-my-primary rounded-[50%] flex items-center justify-center text-[10px] text-my-white`}>
                                 {cart.length}
                             </div>
-                        )}
+                        )} */}
                     </div>
                 </div>
             )}

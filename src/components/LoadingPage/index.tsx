@@ -12,7 +12,7 @@ export default function LoadingPage() {
     return(
         <>
             {loading == true && (
-                <div className={`w-screen h-screen fixed top-0 left-0 bg-[#000000de] flex items-center justify-center`}>
+                <div className={`w-screen h-screen fixed top-0 left-0 bg-[#000000de] flex items-center justify-center z-[999]`}>
                     <p className={`text-my-white capitalize font-bold`}>loading...</p>
                 </div>
             )}
